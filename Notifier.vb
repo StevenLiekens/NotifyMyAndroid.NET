@@ -21,7 +21,7 @@
         Public Shared Function NotifyAsync(recipient As ApiKey, sender As String, subject As String, message As String, Optional priority As Priority? = Nothing, Optional hyperlink As Uri = Nothing, Optional isHtml As Boolean = False) As Task(Of NMAResponse)
             Dim ring As New KeyRing
             ring.Add(recipient)
-            Return Notifier.NotifyAsync(ring, sender, subject, message)
+            Return Notifier.NotifyAsync(ring, sender, subject, message, priority, hyperlink, isHtml)
         End Function
 
         ''' <summary>
