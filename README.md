@@ -12,7 +12,10 @@ It is essentially a thin wrapper around the new HTTP APIs in the System.Net.Http
 Examples
 ===================
 VB.NET: https://github.com/StevenLiekens/NotifyMyAndroid.NET/wiki/Examples-(VB.NET)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 52849c012123989de4791774a1eb147a9a3c4377
 C#: TODO
 
 TODO
