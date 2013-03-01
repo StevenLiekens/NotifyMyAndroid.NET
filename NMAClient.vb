@@ -229,12 +229,12 @@
         Protected Overridable Sub Dispose(disposing As Boolean)
             If Not Me.disposedValue Then
                 If disposing Then
+                    _instance = New Lazy(Of NMAClient)(Function() New NMAClient())
                     If _client IsNot Nothing AndAlso _client.IsValueCreated Then
                         _client.Value.Dispose()
-                        _client = Nothing
                     End If
+                    _client = Nothing
                 End If
-
             End If
             Me.disposedValue = True
         End Sub
