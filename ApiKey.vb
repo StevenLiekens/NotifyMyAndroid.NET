@@ -6,7 +6,9 @@
     Public Class ApiKey
 
         Public Sub New(key As Byte())
-            If key.Length <> 24 Then
+            If key Is Nothing Then
+                Throw New ArgumentNullException("key", "key cannot be empty")
+            ElseIf key.Length <> 24 Then
                 Throw New ArgumentOutOfRangeException("key", "key length must be exactly 24 bytes")
             End If
             _key = key
@@ -43,8 +45,10 @@
         ''' </summary>
         ''' <param name="value">Hexadecimal string representation of an API key.</param>
         Public Shared Function Parse(value As String) As ApiKey
-            If value.Length <> 48 Then
-                Throw New ArgumentException("invalid format: key must be a 48 bytes hexadecimal string")
+            If String.IsNullOrEmpty(value) Then
+                Throw New ArgumentNullException("value", "value cannot be empty")
+            ElseIf value.Length <> 48 Then
+                Throw New ArgumentException("invalid format: value must be a 48 bytes hexadecimal string")
             End If
 
             Dim key As New List(Of Byte)
@@ -52,7 +56,7 @@
             Dim container As Byte = Nothing
             For i = 0 To value.Length - 1 Step 2
                 If Not Byte.TryParse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
-                    Throw New ArgumentException("invalid data: key must be a hexadecimal string")
+                    Throw New ArgumentException("invalid data: value must be a hexadecimal string")
                 End If
                 key.Add(container)
             Next
@@ -67,7 +71,7 @@
         ''' <param name="result">When this method is able to successfully parse the value, contains an instance of <see cref="ApiKey"/> for the specified value.</param>
         ''' <returns>True if the method ran to completion; otherwise false.</returns>
         Public Shared Function TryParse(value As String, ByRef result As ApiKey) As Boolean
-            If value.Length <> 48 Then
+            If String.IsNullOrEmpty(value) OrElse value.Length <> 48 Then
                 Return False
             End If
 
@@ -89,15 +93,15 @@
         ''' <summary>
         ''' Gets whether the specified literal string is a valid key format.
         ''' </summary>
-        Public Shared Function IsValidKeyFormat(key As String) As Boolean
-            If key.Length <> 48 Then
+        Public Shared Function IsValidKeyFormat(value As String) As Boolean
+            If String.IsNullOrEmpty(value) OrElse value.Length <> 48 Then
                 Return False
             End If
 
             Dim container As Byte
 
-            For i = 0 To key.Length - 1 Step 2
-                If Not Byte.TryParse(key.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
+            For i = 0 To value.Length - 1 Step 2
+                If Not Byte.TryParse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
                     Return False
                 End If
             Next
