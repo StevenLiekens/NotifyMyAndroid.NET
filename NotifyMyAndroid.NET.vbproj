@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiKey.vb" />
+    <Compile Include="Events\NMAUsageChangedEventArgs.vb" />
     <Compile Include="HTTP\NotificationContent.vb" />
     <Compile Include="HTTP\NotifyRequestMessage.vb" />
     <Compile Include="HTTP\VerifyRequestMessage.vb" />

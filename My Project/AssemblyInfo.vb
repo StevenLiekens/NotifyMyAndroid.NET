@@ -8,11 +8,11 @@ Imports System.Reflection
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("NotifyMyAndroid")> 
+<Assembly: AssemblyTitle("NotifyMyAndroid.NET")> 
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("NotifyMyAndroid")> 
-<Assembly: AssemblyCopyright("Copyright ©  2013")> 
+<Assembly: AssemblyProduct("NotifyMyAndroid.NET")> 
+<Assembly: AssemblyCopyright("steven.liekens@gmail.com")> 
 <Assembly: AssemblyTrademark("")> 
 <Assembly: NeutralResourcesLanguage("en")>
 
@@ -27,5 +27,5 @@ Imports System.Reflection
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("1.0.1.0")> 
 <Assembly: AssemblyFileVersion("1.0.0.0")> 

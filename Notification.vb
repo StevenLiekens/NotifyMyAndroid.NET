@@ -124,6 +124,23 @@
         ''' </summary>
         Public Property IsHTML As Boolean
 
+        ''' <summary>
+        ''' Sends this notification to the specified recipient and returns an object indicating the command result.
+        ''' </summary>
+        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
+        Public Function SendAsync(recipient As ApiKey) As Task(Of NMAResponse)
+            Return NMAClient.GetInstance().SendNotificationAsync(recipient, Me)
+        End Function
+
+        ''' <summary>
+        ''' Sends this notification to all of the specified recipients and returns an object indicating the command result.
+        ''' </summary>
+        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
+        ''' <remarks>If the specified key ring contains one or more invalid API keys, this method will not report an error unless all of the keys were invalid.</remarks>
+        Public Function SendAsync(recipients As KeyRing) As Task(Of NMAResponse)
+            Return NMAClient.GetInstance().SendNotificationAsync(recipients, Me)
+        End Function
+
     End Class
 
 End Namespace

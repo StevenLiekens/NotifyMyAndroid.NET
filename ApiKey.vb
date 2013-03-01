@@ -5,17 +5,29 @@
     ''' </summary>
     Public Class ApiKey
 
-        Private Sub New(key As String)
-            _value = key
+        Public Sub New(key As Byte())
+            If key.Length <> 24 Then
+                Throw New ArgumentOutOfRangeException("key", "key length must be exactly 24 bytes")
+            End If
+            _key = key
         End Sub
 
-        Private _value As String
+        Private _key(23) As Byte
         ''' <summary>
-        ''' Gets the hexadecimal string representation of this API key.
+        ''' Gets the API key.
+        ''' </summary>
+        Public ReadOnly Property Key As Byte()
+            Get
+                Return _key
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' Gets the hexadecimal string representation of the API key.
         ''' </summary>
         Public ReadOnly Property Value As String
             Get
-                Return _value
+                Return String.Concat(BitConverter.ToString(_key).Split("-"c))
             End Get
         End Property
 
@@ -29,23 +41,35 @@
         ''' <summary>
         ''' Creates a new instance of <see cref="ApiKey"/> for the specified literal string.
         ''' </summary>
-        ''' <param name="value">48 bytes hexadecimal string"</param>
+        ''' <param name="value">Hexadecimal string representation of an API key.</param>
         Public Shared Function Parse(value As String) As ApiKey
             If Not ApiKey.IsValidKeyFormat(value) Then
                 Throw New ArgumentException("invalid format: key must be a 48 bytes hexadecimal string")
             End If
-            Return New ApiKey(value)
+            value = value.Trim
+            Dim key As New List(Of Byte)
+
+            For i = 0 To value.Length - 1 Step 2
+                key.Add(Byte.Parse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber))
+            Next
+
+            Return New ApiKey(key.ToArray)
         End Function
 
         ''' <summary>
         ''' Attempts to create a new instance of <see cref="ApiKey"/> for the specified literal string.
         ''' </summary>
-        ''' <param name="value">48 bytes hexadecimal string"</param>
-        ''' <param name="key">Out value</param>
+        ''' <param name="value">Hexadecimal string representation of an API key.</param>
+        ''' <param name="result">When this method is able to successfully parse the value, contains an instance of <see cref="ApiKey"/> for the specified value.</param>
         ''' <returns>True if the method ran to completion; otherwise false.</returns>
-        Public Shared Function TryParse(value As String, ByRef key As ApiKey) As Boolean
+        Public Shared Function TryParse(value As String, ByRef result As ApiKey) As Boolean
             If Not ApiKey.IsValidKeyFormat(value) Then Return False
-            key = New ApiKey(value)
+            value = value.Trim
+            Dim key As New List(Of Byte)
+            For i = 0 To value.Length - 1 Step 2
+                key.Add(Byte.Parse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber))
+            Next
+            result = New ApiKey(key.ToArray)
             Return True
         End Function
 
@@ -61,8 +85,9 @@
             If key.Length <> 48 Then
                 Return False
             End If
-            For Each character In key.ToCharArray
-                If Not Char.IsLetterOrDigit(character) Then
+            Dim result As Byte
+            For i = 0 To key.Length - 1 Step 2
+                If Not Byte.TryParse(key.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.CultureInfo.InvariantCulture, result) Then
                     Return False
                 End If
             Next
@@ -70,20 +95,21 @@
         End Function
 
         ''' <summary>
-        ''' Generates a random key.
+        ''' Generates a random key for testing purposes.
         ''' </summary>
+        ''' <remarks>There are 2¹⁹² possible key combinations, so the odds of this method ever returning an existing key are quite low.</remarks>
         Public Shared Function GenerateKey() As ApiKey
-            Dim builder As New Text.StringBuilder
+            Dim key(23) As Byte
             Dim r As New Random()
 
-            For i = 1 To 48
-                builder.Append(r.Next(0, 15).ToString("x"))
+            For i = 0 To 23
+                key(i) = CByte(r.Next(255))
             Next
 
-            Return ApiKey.Parse(builder.ToString)
+            Return New ApiKey(key)
         End Function
 
-#Region "Implementation"
+#Region "Implementation details"
 
         Public Overrides Function Equals(obj As Object) As Boolean
             Return Me.Equals(TryCast(obj, ApiKey))

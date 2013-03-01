@@ -1,16 +1,17 @@
-﻿Imports System.Net.Http
-
-Namespace NotifyMyAndroid
+﻿Namespace NotifyMyAndroid
 
     Public Class NMAClient
         Implements IDisposable
 
-        Private Sub New()
-            NMAClient.CallsRemaining = 800
-            NMAClient.TimeUntilReset = TimeSpan.FromHours(1)
+        Shared Sub New()
+            Debug.WriteLine("initializing client")
+            NMAClient.SetUsage(800, TimeSpan.MaxValue)
         End Sub
 
-        Private Shared _instance As New Lazy(Of NMAClient)(Function() New NMAClient(), False)
+        Private Sub New()
+        End Sub
+
+        Private Shared _instance As New Lazy(Of NMAClient)(Function() New NMAClient())
         ''' <summary>
         ''' Gets an instance.
         ''' </summary>
@@ -39,8 +40,12 @@ Namespace NotifyMyAndroid
 
         Private Shared _callsRemaining As Integer
         ''' <summary>
-        ''' Indicates the API calls quota associated with the current IP address since the last call.
+        ''' Indicates how many API calls can still be made using the current IP address.
         ''' </summary>
+        ''' <remarks>
+        ''' This value is synchronised with the server whenever an API call is made using the current object instance.
+        ''' If other applications targetting the NMA API are active on the current IP address, this value may go out of sync with the actual amount of remaining calls.
+        ''' </remarks>
         Public Shared Property CallsRemaining As Integer
             Get
                 Return _callsRemaining
@@ -52,27 +57,35 @@ Namespace NotifyMyAndroid
 
         Private Shared _timeUntilReset As TimeSpan
         ''' <summary>
-        ''' Indicates the amount of minutes since the last call until the remaining amount of API calls resets.
+        ''' Indicates how many minutes before the remaining amount of API calls resets.
         ''' </summary>
+        ''' <remarks>
+        ''' This value is synchronised with the server whenever an API call is made using the current object instance.
+        ''' However, <see cref="NMAClient"/> does try to calculate the actual value in between calls.
+        ''' </remarks>
         Public Shared Property TimeUntilReset As TimeSpan
             Get
-                Return _timeUntilReset
+                If _timeUntilReset = TimeSpan.MaxValue Then
+                    Return _timeUntilReset
+                End If
+                Dim EstimatedTimeSince = Date.Now - NMAClient.LastUsageUpdate.Value
+
+                If EstimatedTimeSince < TimeSpan.Zero Then
+                    SetUsage(800, New TimeSpan(1, 0, 0))
+                    Return _timeUntilReset
+                Else
+                    Return TimeSpan.FromMinutes(Math.Ceiling((_timeUntilReset - EstimatedTimeSince).TotalSeconds / 60))
+                End If
             End Get
             Private Set(value As TimeSpan)
                 _timeUntilReset = value
             End Set
         End Property
 
-        Private _client As New Lazy(Of HttpClient)(False)
-        Private ReadOnly Property HttpClient As HttpClient
-            Get
-                Return _client.Value
-            End Get
-        End Property
-
         ''' <summary>
         ''' Sends the specified notification to the specified recipient.
         ''' </summary>
+        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
         Public Function SendNotificationAsync(recipient As ApiKey, notification As Notification) As Task(Of NMAResponse)
             If recipient Is Nothing Then
                 Throw New ArgumentNullException("recipient")
@@ -85,6 +98,7 @@ Namespace NotifyMyAndroid
         ''' <summary>
         ''' Sends the specified notification to all of the specified recipients.
         ''' </summary>
+        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
         Public Function SendNotificationAsync(recipients As KeyRing, notification As Notification) As Task(Of NMAResponse)
             If recipients Is Nothing Then
                 Throw New ArgumentNullException("recipients")
@@ -95,6 +109,59 @@ Namespace NotifyMyAndroid
             Return Me.SendNotificationAsyncImplementation(recipients, notification)
         End Function
 
+        ''' <summary>
+        ''' Gets whether the specified key is valid.
+        ''' </summary>
+        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
+        Public Function VerifyAsync(key As ApiKey) As Task(Of NMAResponse)
+            If key Is Nothing Then
+                Throw New ArgumentNullException("key")
+            End If
+            Return Me.VerifyAsyncImplementation(key)
+        End Function
+
+        Private Shared _usageChangedEventHandlers As New Lazy(Of List(Of EventHandler(Of NMAUsageChangedEventArgs)))
+        ''' <summary>
+        ''' Occurs whenever <see cref="CallsRemaining"/> or <see cref="TimeUntilReset"/> are updated.
+        ''' </summary>
+        ''' <remarks>
+        ''' This event typically occurs whenever an API call is made, because that's when values are synchronized with the server.
+        ''' </remarks>
+        Public Shared Custom Event NMAUsageChanged As EventHandler(Of NMAUsageChangedEventArgs)
+            AddHandler(value As EventHandler(Of NMAUsageChangedEventArgs))
+                If Not _usageChangedEventHandlers.Value.Contains(value) Then
+                    _usageChangedEventHandlers.Value.Add(value)
+                End If
+            End AddHandler
+
+            RemoveHandler(value As EventHandler(Of NMAUsageChangedEventArgs))
+                If _usageChangedEventHandlers.Value.Contains(value) Then
+                    _usageChangedEventHandlers.Value.Remove(value)
+                End If
+            End RemoveHandler
+
+            RaiseEvent(sender As Object, e As NMAUsageChangedEventArgs)
+                Debug.WriteLine("Calls remaining: {0}", e.CallsRemaining.ToString)
+                Debug.WriteLine("Time until reset: {0}", e.TimeUntilReset.ToString)
+                For Each handler In _usageChangedEventHandlers.Value
+                    If handler IsNot Nothing Then
+                        Task.Factory.FromAsync(handler.BeginInvoke(sender, e, Nothing, Nothing), AddressOf handler.EndInvoke)
+                    End If
+                Next
+            End RaiseEvent
+        End Event
+
+#Region "Implementation details"
+
+        Private _client As New Lazy(Of HttpClient)(False)
+        Private ReadOnly Property HttpClient As HttpClient
+            Get
+                Return _client.Value
+            End Get
+        End Property
+
+        Private Shared Property LastUsageUpdate As Date?
+
         Private Async Function SendNotificationAsyncImplementation(recipients As KeyRing, notification As Notification) As Task(Of NMAResponse)
             Using request As New Http.NotifyRequestMessage
                 request.Content = New Http.NotificationContent(recipients, notification)
@@ -104,33 +171,6 @@ Namespace NotifyMyAndroid
             End Using
         End Function
 
-        Private Async Function HandleResponse(response As HttpResponseMessage) As Task(Of NMAResponse)
-            response.EnsureSuccessStatusCode()
-            Dim xml = XDocument.Load(Await response.Content.ReadAsStreamAsync().ConfigureAwait(False))
-            Dim result = NMAResponse.GetResponse(xml)
-            If result.TimeUntilReset.HasValue Then
-                NMAClient.TimeUntilReset = result.TimeUntilReset.Value
-            End If
-            If result.IsSuccessStatusCode Then
-                NMAClient.CallsRemaining = DirectCast(result, NMASuccess).CallsRemaining
-            ElseIf result.StatusCode = StatusCode.LimitReached Then
-                NMAClient.CallsRemaining = 0
-            Else
-                NMAClient.CallsRemaining -= 1
-            End If
-            Return result
-        End Function
-
-        ''' <summary>
-        ''' Gets whether the specified key is valid.
-        ''' </summary>
-        Public Function VerifyAsync(key As ApiKey) As Task(Of NMAResponse)
-            If key Is Nothing Then
-                Throw New ArgumentNullException("key")
-            End If
-            Return Me.VerifyAsyncImplementation(key)
-        End Function
-
         Private Async Function VerifyAsyncImplementation(key As ApiKey) As Task(Of NMAResponse)
             Using request As New Http.VerifyRequestMessage(key)
                 Using response = Await NMAClient.GetInstance.HttpClient.SendAsync(request).ConfigureAwait(False)
@@ -138,6 +178,36 @@ Namespace NotifyMyAndroid
                 End Using
             End Using
         End Function
+
+        Private Async Function HandleResponse(response As HttpResponseMessage) As Task(Of NMAResponse)
+            response.EnsureSuccessStatusCode()
+            Dim xml = XDocument.Load(Await response.Content.ReadAsStreamAsync().ConfigureAwait(False))
+            Dim result = NMAResponse.GetResponse(xml)
+
+            Dim timeUntilReset As TimeSpan = _timeUntilReset
+            If result.TimeUntilReset.HasValue Then
+                timeUntilReset = result.TimeUntilReset.Value
+            End If
+
+            Dim callsRemaining As Integer = _callsRemaining
+            If result.IsSuccessStatusCode Then
+                callsRemaining = DirectCast(result, NMASuccess).CallsRemaining
+            ElseIf result.StatusCode = StatusCode.LimitReached Then
+                callsRemaining = 0
+            Else
+                callsRemaining -= 1
+            End If
+            NMAClient.SetUsage(callsRemaining, timeUntilReset)
+
+            Return result
+        End Function
+
+        Private Shared Sub SetUsage(callsRemaining As Integer, timeUntilReset As TimeSpan)
+            NMAClient.LastUsageUpdate = Date.Now
+            NMAClient.CallsRemaining = callsRemaining
+            NMAClient.TimeUntilReset = timeUntilReset
+            RaiseEvent NMAUsageChanged(Nothing, New NMAUsageChangedEventArgs(callsRemaining, timeUntilReset))
+        End Sub
 
         Friend Shared Function GetUriBuilder(command As NMACommand) As UriBuilder
             Dim builder As New UriBuilder
@@ -150,6 +220,8 @@ Namespace NotifyMyAndroid
             builder.Path = "/publicapi/" & command.Value
             Return builder
         End Function
+
+#End Region
 
 #Region "IDisposable Support"
         Private disposedValue As Boolean ' To detect redundant calls

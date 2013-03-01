@@ -8,6 +8,14 @@ Namespace NotifyMyAndroid
     <Runtime.InteropServices.ComVisible(False)>
     Public Class KeyRing : Inherits Collection(Of ApiKey)
 
+        Public Sub New()
+            MyBase.New()
+        End Sub
+
+        Public Sub New(ParamArray keys As ApiKey())
+            MyBase.New(keys)
+        End Sub
+
         ''' <summary>
         ''' Gets a comma seperated list of all API keys in this instance.
         ''' </summary>
