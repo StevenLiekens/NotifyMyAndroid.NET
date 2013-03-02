@@ -7,7 +7,7 @@
 
         Private _from As String
         ''' <summary>
-        ''' Indicates the name of the person or application that is generating the call.
+        ''' Indicates the person or application that is generating the call.
         ''' </summary>
         ''' <remarks>Required. Maximum length is 256 characters.</remarks>
         ''' <example>Example: Nagios</example>
@@ -20,10 +20,10 @@
             End Get
             Set(value As String)
                 If String.IsNullOrEmpty(value) Then
-                    Throw New ArgumentNullException("value", "application name cannot be empty")
+                    Throw New ArgumentNullException("value", "Name cannot be empty.")
                 End If
                 If value.Length > 256 Then
-                    Throw New ArgumentException("application name exceeds the limit of 256 characters", "value")
+                    Throw New ArgumentOutOfRangeException("Name exceeds the 256 characters limitation.", "value")
                 End If
                 _from = value
             End Set
@@ -44,10 +44,10 @@
             End Get
             Set(value As String)
                 If String.IsNullOrEmpty(value) Then
-                    Throw New ArgumentNullException("value", "subject cannot be empty")
+                    Throw New ArgumentNullException("value", "Subject cannot be empty.")
                 End If
                 If value.Length > 1000 Then
-                    Throw New ArgumentException("subject exceeds the limit of 1000 characters", "value")
+                    Throw New ArgumentOutOfRangeException("Subject exceeds the 1000 characters limitation.", "value")
                 End If
                 _subject = value
             End Set
@@ -74,10 +74,10 @@
             End Get
             Set(value As String)
                 If String.IsNullOrEmpty(value) Then
-                    Throw New ArgumentNullException("value", "message cannot be empty")
+                    Throw New ArgumentNullException("value", "Message cannot be empty.")
                 End If
                 If value.Length > 10000 Then
-                    Throw New ArgumentException("message exceeds the limit of 10.000 characters", "value")
+                    Throw New ArgumentOutOfRangeException("Message exceeds the 10.000 characters limitation.", "value")
                 End If
                 _message = value
             End Set
@@ -95,7 +95,7 @@
             Set(value As Priority?)
                 If value.HasValue Then
                     If Not [Enum].IsDefined(GetType(Priority), value.Value) Then
-                        Throw New ArgumentOutOfRangeException("value", "specified priority level is invalid")
+                        Throw New ArgumentOutOfRangeException("value", "Specified priority level is invalid.")
                     End If
                 End If
                 _priority = value
@@ -113,7 +113,7 @@
             End Get
             Set(value As Uri)
                 If value IsNot Nothing AndAlso value.ToString.Length > 2000 Then
-                    Throw New ArgumentException("Hyperlink exceeds the limit of 2000 characters", "value")
+                    Throw New ArgumentOutOfRangeException("Hyperlink exceeds the 2000 characters limitation.", "value")
                 End If
                 _hyperlink = value
             End Set
@@ -128,7 +128,7 @@
         ''' Sends this notification to the specified recipient and returns an object indicating the command result.
         ''' </summary>
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
-        Public Function SendAsync(recipient As ApiKey) As Task(Of NMAResponse)
+        Public Function SendAsync(recipient As NMAKey) As Task(Of NMAResponse)
             Return NMAClient.GetInstance().SendNotificationAsync(recipient, Me)
         End Function
 

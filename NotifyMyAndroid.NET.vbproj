@@ -61,7 +61,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiKey.vb" />
+    <Compile Include="NMAKey.vb" />
     <Compile Include="Events\NMAUsageChangedEventArgs.vb" />
     <Compile Include="HTTP\NotificationContent.vb" />
     <Compile Include="HTTP\NotifyRequestMessage.vb" />

@@ -24,16 +24,16 @@
         ''' </summary>
         Public Shared Property UseSSL As Boolean = True
 
-        Private Shared _developerKey As ApiKey
+        Private Shared _developerKey As NMAKey
         ''' <summary>
         ''' Gets or sets a developer key.
         ''' </summary>
         ''' <remarks>A developer key lifts the hourly API call limit.</remarks>
-        Public Shared Property DeveloperKey As ApiKey
+        Public Shared Property DeveloperKey As NMAKey
             Get
                 Return _developerKey
             End Get
-            Set(value As ApiKey)
+            Set(value As NMAKey)
                 _developerKey = value
             End Set
         End Property
@@ -86,7 +86,7 @@
         ''' Sends the specified notification to the specified recipient.
         ''' </summary>
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
-        Public Function SendNotificationAsync(recipient As ApiKey, notification As Notification) As Task(Of NMAResponse)
+        Public Function SendNotificationAsync(recipient As NMAKey, notification As Notification) As Task(Of NMAResponse)
             If recipient Is Nothing Then
                 Throw New ArgumentNullException("recipient")
             End If
@@ -113,7 +113,7 @@
         ''' Gets whether the specified key is valid.
         ''' </summary>
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
-        Public Function VerifyAsync(key As ApiKey) As Task(Of NMAResponse)
+        Public Function VerifyAsync(key As NMAKey) As Task(Of NMAResponse)
             If key Is Nothing Then
                 Throw New ArgumentNullException("key")
             End If
@@ -171,7 +171,7 @@
             End Using
         End Function
 
-        Private Async Function VerifyAsyncImplementation(key As ApiKey) As Task(Of NMAResponse)
+        Private Async Function VerifyAsyncImplementation(key As NMAKey) As Task(Of NMAResponse)
             Using request As New Http.VerifyRequestMessage(key)
                 Using response = Await NMAClient.GetInstance.HttpClient.SendAsync(request).ConfigureAwait(False)
                     Return Await HandleResponse(response).ConfigureAwait(False)

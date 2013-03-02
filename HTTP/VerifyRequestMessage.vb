@@ -5,7 +5,7 @@
     ''' </summary>
     Public Class VerifyRequestMessage : Inherits HttpRequestMessage
 
-        Public Sub New(key As ApiKey)
+        Public Sub New(key As NMAKey)
             Me.Method = HttpMethod.Get
             Dim builder = NMAClient.GetUriBuilder(NMACommand.Verify)
             Dim query As String = "apikey=" & key.Value
