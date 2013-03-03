@@ -61,6 +61,8 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parameters\Output.vb" />
+    <Compile Include="Parameters\Input.vb" />
     <Compile Include="NMAKey.vb" />
     <Compile Include="Events\NMAUsageChangedEventArgs.vb" />
     <Compile Include="HTTP\NotificationContent.vb" />
@@ -68,6 +70,7 @@
     <Compile Include="HTTP\VerifyRequestMessage.vb" />
     <Compile Include="NMACommand.vb" />
     <Compile Include="Notifier.vb" />
+    <Compile Include="Parameters\Parameter.vb" />
     <Compile Include="Priority.vb" />
     <Compile Include="Responses\NMAError.vb" />
     <Compile Include="Responses\NMASuccess.vb" />
@@ -78,6 +81,9 @@
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="NMAClient.vb" />
     <Compile Include="Responses\NMAResponse.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NotifyMyAndroid.NET.licenseheader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

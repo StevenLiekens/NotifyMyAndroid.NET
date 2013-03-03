@@ -1,4 +1,29 @@
-﻿Namespace NotifyMyAndroid
+﻿#Region "LICENSE"
+' Copyright 2013 Steven Liekens
+' Contact: steven.liekens@gmail.com
+'
+' Permission is hereby granted, free of charge, to any person obtaining
+' a copy of this software and associated documentation files (the
+' "Software"), to deal in the Software without restriction, including
+' without limitation the rights to use, copy, modify, merge, publish,
+' distribute, sublicense, and/or sell copies of the Software, and to
+' permit persons to whom the Software is furnished to do so, subject to
+' the following conditions:
+'
+' The above copyright notice and this permission notice shall be
+' included in all copies or substantial portions of the Software.
+'
+' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+' EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+' MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+' NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+' LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#End Region
+Imports System.Collections.Concurrent
+
+Namespace NotifyMyAndroid
 
     ''' <summary>
     ''' Represents an API key and provides methods to create, validate and compare API keys.
@@ -7,9 +32,9 @@
 
         Public Sub New(key As Byte())
             If key Is Nothing Then
-                Throw New ArgumentNullException("key", "key cannot be empty")
+                Throw New ArgumentNullException("key", "Key cannot be empty.")
             ElseIf key.Length <> 24 Then
-                Throw New ArgumentOutOfRangeException("key", "key length must be exactly 24 bytes")
+                Throw New ArgumentOutOfRangeException("key", "Key length must be exactly 24 bytes.")
             End If
             _key = key
         End Sub
@@ -46,9 +71,9 @@
         ''' <param name="value">Hexadecimal string representation of an API key.</param>
         Public Shared Function Parse(value As String) As NMAKey
             If String.IsNullOrEmpty(value) Then
-                Throw New ArgumentNullException("value", "value cannot be empty")
+                Throw New ArgumentNullException("value", "Value cannot be empty.")
             ElseIf value.Length <> 48 Then
-                Throw New ArgumentOutOfRangeException("invalid length: value must be a 48 bytes hexadecimal string")
+                Throw New ArgumentOutOfRangeException("Invalid length: value must be a 48 bytes hexadecimal string.")
             End If
 
             Dim key As New Queue(Of Byte)
@@ -56,7 +81,7 @@
             Dim container As Byte = Nothing
             For i = 0 To value.Length - 1 Step 2
                 If Not Byte.TryParse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
-                    Throw New ArgumentException("invalid data: value must be a hexadecimal string")
+                    Throw New ArgumentException("Invalid data: value must be a hexadecimal string.")
                 End If
                 key.Enqueue(container)
             Next
@@ -108,19 +133,17 @@
             Return True
         End Function
 
+        Private Shared random As New Random
         ''' <summary>
         ''' Generates a random key for testing purposes.
         ''' </summary>
         ''' <remarks>There are 2¹⁹² possible key combinations, so the odds of this method ever returning an existing key are quite low.</remarks>
         Public Shared Function GenerateKey() As NMAKey
-            Dim key As New Queue(Of Byte)
-            Dim r As New Random()
-
-            Do Until key.Count = 24
-                key.Enqueue(CByte(r.Next(Byte.MaxValue)))
-            Loop
-
-            Return New NMAKey(key.ToArray)
+            Dim key(23) As Byte
+            SyncLock NMAKey.random
+                NMAKey.random.NextBytes(key)
+            End SyncLock
+            Return New NMAKey(key)
         End Function
 
 #Region "Implementation details"
@@ -135,6 +158,7 @@
 
         Public Overloads Function Equals(obj As NMAKey) As Boolean
             If obj Is Nothing Then Return False
+
             For i = 0 To 23
                 If Me._key(i) <> obj._key(i) Then
                     Return False
@@ -157,6 +181,14 @@
 
         Public Shared Operator <>(left As NMAKey, right As NMAKey) As Boolean
             Return Not (left = right)
+        End Operator
+
+        Public Overloads Shared Widening Operator CType(value As NMAKey) As String
+            Return value.Value
+        End Operator
+
+        Public Overloads Shared Narrowing Operator CType(value As String) As NMAKey
+            Return NMAKey.Parse(value)
         End Operator
 
 #End Region

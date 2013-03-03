@@ -1,5 +1,26 @@
-﻿Imports System.Net.Http
-
+﻿#Region "LICENSE"
+' Copyright 2013 Steven Liekens
+' Contact: steven.liekens@gmail.com
+'
+' Permission is hereby granted, free of charge, to any person obtaining
+' a copy of this software and associated documentation files (the
+' "Software"), to deal in the Software without restriction, including
+' without limitation the rights to use, copy, modify, merge, publish,
+' distribute, sublicense, and/or sell copies of the Software, and to
+' permit persons to whom the Software is furnished to do so, subject to
+' the following conditions:
+'
+' The above copyright notice and this permission notice shall be
+' included in all copies or substantial portions of the Software.
+'
+' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+' EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+' MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+' NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+' LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#End Region
 Namespace NotifyMyAndroid
 
     ''' <summary>
@@ -17,7 +38,7 @@ Namespace NotifyMyAndroid
         ''' </summary>
         Public ReadOnly Property StatusCode As StatusCode
             Get
-                Return Me.GetAttribute(Of StatusCode)("code")
+                Return Me.GetAttribute(Of StatusCode)(Output.Code)
             End Get
         End Property
 
@@ -27,7 +48,7 @@ Namespace NotifyMyAndroid
         Public ReadOnly Property TimeUntilReset As TimeSpan?
             Get
                 If Me.StatusCode = NotifyMyAndroid.StatusCode.Success Or Me.StatusCode = NotifyMyAndroid.StatusCode.LimitReached Then
-                    Return Me.GetAttribute(Of TimeSpan)("resettimer")
+                    Return Me.GetAttribute(Of TimeSpan)(Output.ResetTimer)
                 End If
             End Get
         End Property
@@ -59,7 +80,7 @@ Namespace NotifyMyAndroid
             End If
             Dim result = TryCast(response.Root.FirstNode, XElement)
             If result Is Nothing Then
-                Throw New ArgumentException("specified response is invalid", "response")
+                Throw New ArgumentException("The specified response is invalid.", "response")
             End If
             Select Case True
                 Case String.Equals(result.Name.LocalName, "success", StringComparison.OrdinalIgnoreCase)
@@ -67,11 +88,11 @@ Namespace NotifyMyAndroid
                 Case String.Equals(result.Name.LocalName, "error", StringComparison.OrdinalIgnoreCase)
                     Return New NMAError(response)
                 Case Else
-                    Throw New ArgumentException("specified response is invalid", "response")
+                    Throw New ArgumentException("The specified response is invalid.", "response")
             End Select
         End Function
 
-#Region "Implementation"
+#Region "Implementation details"
 
         Protected ReadOnly Property Source As XDocument
             Get

@@ -21,35 +21,40 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
-Imports System
-Imports System.Resources
-Imports System.Reflection
 
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
+Namespace NotifyMyAndroid
 
-' Review the values of the assembly attributes
+    ''' <summary>
+    ''' A helper class for comparing output parameters and creating new output parameters.
+    ''' </summary>
+    Public NotInheritable Class Output : Inherits Parameter
 
-<Assembly: AssemblyTitle("NotifyMyAndroid.NET")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("NotifyMyAndroid.NET")> 
-<Assembly: AssemblyCopyright("steven.liekens@gmail.com")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: NeutralResourcesLanguage("en")>
+        Public Shared _code As Output = New Output("code")
+        Public Shared _remaining As Output = New Output("remaining")
+        Public Shared _resettimer As Output = New Output("resettimer")
 
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")> 
+        Private Sub New(parameter As String)
+            MyBase.New(parameter)
+        End Sub
 
-<Assembly: AssemblyVersion("0.9.0.0")> 
-<Assembly: AssemblyFileVersion("0.9.0.0")> 
-<Assembly: AssemblyInformationalVersion("1.0 RC")> 
+        Public Shared ReadOnly Property Code As Output
+            Get
+                Return Output._code
+            End Get
+        End Property
+
+        Public Shared ReadOnly Property Remaining As Output
+            Get
+                Return Output._remaining
+            End Get
+        End Property
+
+        Public Shared ReadOnly Property ResetTimer As Output
+            Get
+                Return Output._resettimer
+            End Get
+        End Property
+
+    End Class
+
+End Namespace

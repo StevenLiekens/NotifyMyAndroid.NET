@@ -1,10 +1,32 @@
-﻿Namespace NotifyMyAndroid
+﻿#Region "LICENSE"
+' Copyright 2013 Steven Liekens
+' Contact: steven.liekens@gmail.com
+'
+' Permission is hereby granted, free of charge, to any person obtaining
+' a copy of this software and associated documentation files (the
+' "Software"), to deal in the Software without restriction, including
+' without limitation the rights to use, copy, modify, merge, publish,
+' distribute, sublicense, and/or sell copies of the Software, and to
+' permit persons to whom the Software is furnished to do so, subject to
+' the following conditions:
+'
+' The above copyright notice and this permission notice shall be
+' included in all copies or substantial portions of the Software.
+'
+' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+' EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+' MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+' NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+' LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#End Region
+Namespace NotifyMyAndroid
 
     Public Class NMAClient
         Implements IDisposable
 
         Shared Sub New()
-            Debug.WriteLine("initializing client")
             NMAClient.SetUsage(800, TimeSpan.MaxValue)
         End Sub
 
@@ -70,8 +92,8 @@
                 End If
                 Dim EstimatedTimeSince = Date.Now - NMAClient.LastUsageUpdate.Value
 
-                If EstimatedTimeSince < TimeSpan.Zero Then
-                    SetUsage(800, New TimeSpan(1, 0, 0))
+                If _timeUntilReset - EstimatedTimeSince < TimeSpan.Zero Then
+                    SetUsage(800, TimeSpan.MaxValue)
                     Return _timeUntilReset
                 Else
                     Return TimeSpan.FromMinutes(Math.Ceiling((_timeUntilReset - EstimatedTimeSince).TotalSeconds / 60))
@@ -88,7 +110,7 @@
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
         Public Function SendNotificationAsync(recipient As NMAKey, notification As Notification) As Task(Of NMAResponse)
             If recipient Is Nothing Then
-                Throw New ArgumentNullException("recipient")
+                Throw New ArgumentNullException("recipient", "Recipient cannot be empty.")
             End If
             Dim ring As New KeyRing()
             ring.Add(recipient)
@@ -101,10 +123,10 @@
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
         Public Function SendNotificationAsync(recipients As KeyRing, notification As Notification) As Task(Of NMAResponse)
             If recipients Is Nothing Then
-                Throw New ArgumentNullException("recipients")
+                Throw New ArgumentNullException("recipients", "Recipients cannot be empty.")
             End If
             If notification Is Nothing Then
-                Throw New ArgumentNullException("notification")
+                Throw New ArgumentNullException("notification", "Notification cannot be empty.")
             End If
             Return Me.SendNotificationAsyncImplementation(recipients, notification)
         End Function
@@ -115,7 +137,7 @@
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
         Public Function VerifyAsync(key As NMAKey) As Task(Of NMAResponse)
             If key Is Nothing Then
-                Throw New ArgumentNullException("key")
+                Throw New ArgumentNullException("key", "Key cannot be empty.")
             End If
             Return Me.VerifyAsyncImplementation(key)
         End Function
@@ -141,8 +163,6 @@
             End RemoveHandler
 
             RaiseEvent(sender As Object, e As NMAUsageChangedEventArgs)
-                Debug.WriteLine("Calls remaining: {0}", e.CallsRemaining.ToString)
-                Debug.WriteLine("Time until reset: {0}", e.TimeUntilReset.ToString)
                 For Each handler In _usageChangedEventHandlers.Value
                     If handler IsNot Nothing Then
                         Task.Factory.FromAsync(handler.BeginInvoke(sender, e, Nothing, Nothing), AddressOf handler.EndInvoke)
@@ -184,9 +204,11 @@
             Dim xml = XDocument.Load(Await response.Content.ReadAsStreamAsync().ConfigureAwait(False))
             Dim result = NMAResponse.GetResponse(xml)
 
-            Dim timeUntilReset As TimeSpan = _timeUntilReset
+            Dim timeUntilReset As TimeSpan = NMAClient.TimeUntilReset
             If result.TimeUntilReset.HasValue Then
                 timeUntilReset = result.TimeUntilReset.Value
+            ElseIf timeUntilReset = TimeSpan.MaxValue Then
+                timeUntilReset = New TimeSpan(1, 0, 0)
             End If
 
             Dim callsRemaining As Integer = _callsRemaining

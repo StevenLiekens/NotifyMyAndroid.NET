@@ -21,67 +21,60 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
+
 Namespace NotifyMyAndroid
 
     ''' <summary>
-    ''' A helper class for retrieving and comparing API commands.
+    ''' Base class for parameter container types.
     ''' </summary>
-    Friend Class NMACommand
+    Public MustInherit Class Parameter
 
-        Private Shared _verify As New NMACommand("verify")
-        Private Shared _notify As New NMACommand("notify")
-
-        Private _value As String
-
-        Private Sub New(request As String)
-            _value = request
+        Protected Sub New(name As String)
+            _name = name
         End Sub
 
-        Public ReadOnly Property Value As String
+        Private _name As String
+        Public ReadOnly Property Name As String
             Get
-                Return _value
+                Return _name
             End Get
         End Property
 
-        Public Shared ReadOnly Property Verify As NMACommand
-            Get
-                Return NMACommand._verify
-            End Get
-        End Property
-
-        Public Shared ReadOnly Property Notify As NMACommand
-            Get
-                Return NMACommand._notify
-            End Get
-        End Property
+#Region "Implementation details"
 
         Public Overrides Function Equals(obj As Object) As Boolean
-            Return Me.Equals(TryCast(obj, NMACommand))
+            Return Me.Equals(TryCast(obj, Parameter))
         End Function
 
-        Public Overloads Function Equals(obj As NMACommand) As Boolean
+        Public Overloads Function Equals(obj As Parameter) As Boolean
             If obj Is Nothing Then Return False
-            Return String.Equals(Me.Value, obj.Value, StringComparison.OrdinalIgnoreCase)
+            Return String.Equals(Me.Name, obj.Name, StringComparison.OrdinalIgnoreCase)
         End Function
-
-        Public Shared Operator =(left As NMACommand, right As NMACommand) As Boolean
-            If left Is Nothing Then Return right Is Nothing
-            If right Is Nothing Then Return left Is Nothing
-
-            Return String.Equals(left.Value, right.Value, StringComparison.OrdinalIgnoreCase)
-        End Operator
-
-        Public Shared Operator <>(left As NMACommand, right As NMACommand) As Boolean
-            Return Not (left = right)
-        End Operator
 
         Public Overrides Function GetHashCode() As Integer
-            Return Me.Value.ToUpperInvariant().GetHashCode()
+            Return Me.Name.ToUpperInvariant().GetHashCode()
         End Function
 
         Public Overrides Function ToString() As String
-            Return Me.Value
+            Return Me.Name
         End Function
+
+        Public Overloads Shared Operator =(left As Parameter, right As Parameter) As Boolean
+            If left Is Nothing Then Return right Is Nothing
+            If right Is Nothing Then Return left Is Nothing
+
+            Return String.Equals(left.Name, right.Name, StringComparison.OrdinalIgnoreCase)
+        End Operator
+
+        Public Overloads Shared Operator <>(left As Parameter, right As Parameter) As Boolean
+            Return Not (left = right)
+        End Operator
+
+        Public Shared Widening Operator CType(value As Parameter) As String
+            Return value.Name
+        End Operator
+
+#End Region
 
     End Class
 
