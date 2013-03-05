@@ -27,7 +27,7 @@ Namespace NotifyMyAndroid
     ''' <summary>
     ''' Base class for parameter container types.
     ''' </summary>
-    Public MustInherit Class Parameter
+    Friend MustInherit Class Parameter
 
         Protected Sub New(name As String)
             _name = name

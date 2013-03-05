@@ -26,7 +26,7 @@ Namespace NotifyMyAndroid.Http
     ''' <summary>
     ''' A container for NMA notification name/value tuples encoded using application/x-www-form-urlencoded MIME type.
     ''' </summary>
-    Public Class NotificationContent : Inherits FormUrlEncodedContent
+    Friend Class NotificationContent : Inherits FormUrlEncodedContent
 
         Sub New(recipients As KeyRing, notification As Notification)
             MyBase.New(NotificationContent.GetQuery(recipients, notification))

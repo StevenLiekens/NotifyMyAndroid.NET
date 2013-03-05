@@ -26,7 +26,7 @@ Namespace NotifyMyAndroid.Http
     ''' <summary>
     ''' Represents an HTTP request message targetting the NMA notification API.
     ''' </summary>
-    Public Class NotifyRequestMessage : Inherits HttpRequestMessage
+    Friend Class NotifyRequestMessage : Inherits HttpRequestMessage
 
         Public Sub New()
             Me.Method = HttpMethod.Post

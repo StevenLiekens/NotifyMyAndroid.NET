@@ -27,7 +27,7 @@ Namespace NotifyMyAndroid
     ''' <summary>
     ''' A helper class for comparing input parameters and creating new input parameters.
     ''' </summary>
-    Public NotInheritable Class Input : Inherits Parameter
+    Friend NotInheritable Class Input : Inherits Parameter
 
         Public Shared _apiKey As Input = New Input("apikey")
         Public Shared _application As Input = New Input("application")

@@ -27,7 +27,7 @@ Namespace NotifyMyAndroid
     ''' <summary>
     ''' A helper class for comparing output parameters and creating new output parameters.
     ''' </summary>
-    Public NotInheritable Class Output : Inherits Parameter
+    Friend NotInheritable Class Output : Inherits Parameter
 
         Public Shared _code As Output = New Output("code")
         Public Shared _remaining As Output = New Output("remaining")

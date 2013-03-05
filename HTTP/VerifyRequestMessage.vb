@@ -26,7 +26,7 @@ Namespace NotifyMyAndroid.Http
     ''' <summary>
     ''' Represents an HTTP request message targetting the NMA verification API.
     ''' </summary>
-    Public Class VerifyRequestMessage : Inherits HttpRequestMessage
+    Friend Class VerifyRequestMessage : Inherits HttpRequestMessage
 
         Public Sub New(key As NMAKey)
             Me.Method = HttpMethod.Get
