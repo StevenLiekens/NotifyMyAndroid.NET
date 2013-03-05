@@ -21,7 +21,8 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
-Namespace NotifyMyAndroid
+
+Namespace API
 
     ''' <summary>
     ''' The exception that is thrown if <see cref="NMAResponse.EnsureSuccessStatusCode"/> is called when its status code indicates failure.

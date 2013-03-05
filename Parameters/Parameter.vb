@@ -22,7 +22,7 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace NotifyMyAndroid
+Namespace API
 
     ''' <summary>
     ''' Base class for parameter container types.

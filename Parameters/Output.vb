@@ -22,7 +22,7 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace NotifyMyAndroid
+Namespace API
 
     ''' <summary>
     ''' A helper class for comparing input parameters and creating new input parameters.

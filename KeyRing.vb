@@ -23,7 +23,7 @@
 #End Region
 Imports System.Collections.ObjectModel
 
-Namespace NotifyMyAndroid
+Namespace API
 
     ''' <summary>
     ''' Represents a collection of API keys.

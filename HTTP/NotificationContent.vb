@@ -21,7 +21,8 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
-Namespace NotifyMyAndroid.Http
+
+Namespace API.Http
 
     ''' <summary>
     ''' A container for NMA notification name/value tuples encoded using application/x-www-form-urlencoded MIME type.

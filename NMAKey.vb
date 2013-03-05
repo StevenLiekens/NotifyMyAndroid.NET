@@ -23,7 +23,7 @@
 #End Region
 Imports System.Collections.Concurrent
 
-Namespace NotifyMyAndroid
+Namespace API
 
     ''' <summary>
     ''' Represents an API key and provides methods to create, validate and compare API keys.
