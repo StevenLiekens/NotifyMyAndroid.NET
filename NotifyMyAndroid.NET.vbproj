@@ -72,6 +72,7 @@
     <Compile Include="Notifier.vb" />
     <Compile Include="Parameters\Parameter.vb" />
     <Compile Include="Priority.vb" />
+    <Compile Include="RandomNumberGenerator.vb" />
     <Compile Include="Responses\NMAError.vb" />
     <Compile Include="Responses\NMASuccess.vb" />
     <Compile Include="Responses\StatusCode.vb" />
