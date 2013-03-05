@@ -22,52 +22,30 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-''' <summary>
-''' Provides static methods for creating random numbers.
-''' </summary>
-Friend NotInheritable Class RandomNumberGenerator
+Namespace Utilities
 
-    Private Sub New()
-    End Sub
+    ''' <summary>
+    ''' Provides static methods for creating random numbers.
+    ''' </summary>
+    Friend NotInheritable Class RandomNumberGenerator
 
-    Private Shared randomGenerator As New Lazy(Of Random)
+        Private Sub New()
+        End Sub
 
-    Public Shared Function GetRandomNumber() As Integer
-        SyncLock randomGenerator
-            Return randomGenerator.Value.Next()
-        End SyncLock
-    End Function
+        Private Shared randomGenerator As New Lazy(Of Random)
 
-    Public Shared Function GetRandomNumber(maxValue As Integer) As Integer
-        SyncLock randomGenerator
-            Return randomGenerator.Value.Next(maxValue)
-        End SyncLock
-    End Function
+        ''' <summary>
+        ''' Fills an array of the specified length with random bytes.
+        ''' </summary>
+        Public Shared Function GetRandomBytes(count As Integer) As Byte()
+            Dim buffer(count - 1) As Byte
+            SyncLock randomGenerator
+                randomGenerator.Value.NextBytes(buffer)
+            End SyncLock
+            Return buffer
+        End Function
 
-    Public Shared Function GetRandomNumber(minValue As Integer, maxValue As Integer) As Integer
-        SyncLock randomGenerator
-            Return randomGenerator.Value.Next(minValue, maxValue)
-        End SyncLock
-    End Function
+    End Class
 
-    Public Shared Function GetRandomDouble() As Double
-        SyncLock randomGenerator
-            Return randomGenerator.Value.NextDouble()
-        End SyncLock
-    End Function
+End Namespace
 
-    Public Shared Sub GetRandomBytes(buffer() As Byte)
-        SyncLock randomGenerator
-            randomGenerator.Value.NextBytes(buffer)
-        End SyncLock
-    End Sub
-
-    Public Shared Function GetRandomBytes(count As Integer) As Byte()
-        Dim buffer(count - 1) As Byte
-        SyncLock randomGenerator
-            randomGenerator.Value.NextBytes(buffer)
-        End SyncLock
-        Return buffer
-    End Function
-
-End Class

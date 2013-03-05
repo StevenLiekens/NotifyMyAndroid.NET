@@ -135,7 +135,7 @@ Namespace NotifyMyAndroid
         ''' </summary>
         ''' <remarks>There are 2¹⁹² possible key combinations, so the odds of this method ever returning an existing key are quite low.</remarks>
         Public Shared Function GenerateKey() As NMAKey
-            Return New NMAKey(RandomNumberGenerator.GetRandomBytes(24))
+            Return New NMAKey(Utilities.RandomNumberGenerator.GetRandomBytes(24))
         End Function
 
 #Region "Implementation details"
