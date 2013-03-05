@@ -23,6 +23,9 @@
 #End Region
 Namespace NotifyMyAndroid
 
+    ''' <summary>
+    ''' Provides methods for interacting with the Notify My Android public API.
+    ''' </summary>
     Public Class NMAClient
         Implements IDisposable
 
@@ -65,7 +68,7 @@ Namespace NotifyMyAndroid
         ''' Indicates how many API calls can still be made using the current IP address.
         ''' </summary>
         ''' <remarks>
-        ''' This value is synchronised with the server whenever an API call is made using the current object instance.
+        ''' This value is synchronized with the server whenever an API call is made using the current object instance.
         ''' If other applications targetting the NMA API are active on the current IP address, this value may go out of sync with the actual amount of remaining calls.
         ''' </remarks>
         Public Shared Property CallsRemaining As Integer
@@ -110,7 +113,7 @@ Namespace NotifyMyAndroid
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
         Public Function SendNotificationAsync(recipient As NMAKey, notification As Notification) As Task(Of NMAResponse)
             If recipient Is Nothing Then
-                Throw New ArgumentNullException("recipient", "Recipient cannot be empty.")
+                Throw New ArgumentNullException("recipient", "The recipient cannot be empty.")
             End If
             Dim ring As New KeyRing()
             ring.Add(recipient)
@@ -123,10 +126,10 @@ Namespace NotifyMyAndroid
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
         Public Function SendNotificationAsync(recipients As KeyRing, notification As Notification) As Task(Of NMAResponse)
             If recipients Is Nothing Then
-                Throw New ArgumentNullException("recipients", "Recipients cannot be empty.")
+                Throw New ArgumentNullException("recipients", "The recipients cannot be empty.")
             End If
             If notification Is Nothing Then
-                Throw New ArgumentNullException("notification", "Notification cannot be empty.")
+                Throw New ArgumentNullException("notification", "The notification cannot be empty.")
             End If
             Return Me.SendNotificationAsyncImplementation(recipients, notification)
         End Function
@@ -137,7 +140,7 @@ Namespace NotifyMyAndroid
         ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
         Public Function VerifyAsync(key As NMAKey) As Task(Of NMAResponse)
             If key Is Nothing Then
-                Throw New ArgumentNullException("key", "Key cannot be empty.")
+                Throw New ArgumentNullException("key", "The key cannot be empty.")
             End If
             Return Me.VerifyAsyncImplementation(key)
         End Function
