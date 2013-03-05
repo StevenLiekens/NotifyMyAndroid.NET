@@ -18,8 +18,9 @@ License
 ===================
 NotifyMyAndroid.NET is licensed under the MIT License. A copy of the license is included in the LICENSE file.
 
-Use of this software is subject to the following terms and conditions. Your use of the software constitutes acceptance of these terms and conditions:
-https://www.notifymyandroid.com/tos.jsp
+Use of this software is subject to the following terms and conditions: https://www.notifymyandroid.com/tos.jsp
+
+Your use of the software constitutes acceptance of these terms and conditions.
 
 Privacy Policy: http://www.notifymyandroid.com/privacy.jsp
 
