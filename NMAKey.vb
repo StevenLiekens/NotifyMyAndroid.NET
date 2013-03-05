@@ -133,17 +133,12 @@ Namespace NotifyMyAndroid
             Return True
         End Function
 
-        Private Shared random As New Random
         ''' <summary>
         ''' Generates a random key for testing purposes.
         ''' </summary>
         ''' <remarks>There are 2¹⁹² possible key combinations, so the odds of this method ever returning an existing key are quite low.</remarks>
         Public Shared Function GenerateKey() As NMAKey
-            Dim key(23) As Byte
-            SyncLock NMAKey.random
-                NMAKey.random.NextBytes(key)
-            End SyncLock
-            Return New NMAKey(key)
+            Return New NMAKey(RandomNumberGenerator.GetRandomBytes(24))
         End Function
 
 #Region "Implementation details"
@@ -168,15 +163,11 @@ Namespace NotifyMyAndroid
         End Function
 
         Public Shared Operator =(left As NMAKey, right As NMAKey) As Boolean
-            If left Is Nothing Then Return right Is Nothing
-            If right Is Nothing Then Return left Is Nothing
-
-            For i = 0 To 23
-                If left._key(i) <> right._key(i) Then
-                    Return False
-                End If
-            Next
-            Return True
+            If left IsNot Nothing Then
+                Return left.Equals(right)
+            Else
+                Return right Is Nothing
+            End If
         End Operator
 
         Public Shared Operator <>(left As NMAKey, right As NMAKey) As Boolean
