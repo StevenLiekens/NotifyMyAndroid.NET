@@ -93,26 +93,23 @@ Namespace NotifyMyAndroid
         ''' Attempts to create a new instance of <see cref="NMAKey"/> for the specified literal string.
         ''' </summary>
         ''' <param name="value">Hexadecimal string representation of an API key.</param>
-        ''' <param name="result">When this method is able to successfully parse the value, contains an instance of <see cref="NMAKey"/> for the specified value.</param>
-        ''' <returns>True if the method ran to completion; otherwise false.</returns>
-        Public Shared Function TryParse(value As String, ByRef result As NMAKey) As Boolean
+        ''' <returns>An instance of <see cref="NMAKey"/> if the call was successful; otherwise Nothing.</returns>
+        Public Shared Function TryParse(value As String) As NMAKey
             If String.IsNullOrEmpty(value) OrElse value.Length <> 48 Then
-                Return False
+                Return Nothing
             End If
 
             Dim key As New Queue(Of Byte)
-
             Dim container As Byte = Nothing
+
             For i = 0 To value.Length - 1 Step 2
                 If Not Byte.TryParse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
-                    Return False
+                    Return Nothing
                 End If
                 key.Enqueue(container)
             Next
 
-            result = New NMAKey(key.ToArray)
-
-            Return True
+            Return New NMAKey(key.ToArray)
         End Function
 
         ''' <summary>
