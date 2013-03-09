@@ -31,14 +31,23 @@ Namespace API.Http
 
         Public Sub New(key As NMAKey)
             Me.Method = HttpMethod.Get
-            Dim builder = NMAClient.GetUriBuilder(NMACommand.Verify)
-            Dim query As String = "apikey=" & key.Value
-            If NMAClient.DeveloperKey IsNot Nothing Then
-                query &= "&developerkey=" & NMAClient.DeveloperKey.Value
-            End If
-            builder.Query = query
-            Me.RequestUri = builder.Uri
+            Me.RequestUri = Me.GetRequestUri(key)
         End Sub
+
+        Private Function GetRequestUri(key As NMAKey) As Uri
+            Dim builder = NMAClient.GetUriBuilder(NMACommand.Verify)
+            builder.Query = Me.GetQueryString(key)
+            Return builder.Uri
+        End Function
+
+        Private Function GetQueryString(key As NMAKey) As String
+            Dim builder As New Text.StringBuilder()
+            builder.Append("apikey=") : builder.Append(key.Value)
+            If NMAClient.DeveloperKey IsNot Nothing Then
+                builder.Append("&developerkey=") : builder.Append(NMAClient.DeveloperKey.Value)
+            End If
+            Return builder.ToString
+        End Function
 
     End Class
 
