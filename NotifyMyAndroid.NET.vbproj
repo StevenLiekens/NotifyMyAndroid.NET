@@ -60,11 +60,11 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Implementation\Input.vb" />
+    <Compile Include="API\Implementation\Output.vb" />
     <Compile Include="API\Implementation\NMACommand.vb" />
     <Compile Include="API\Implementation\NotificationContent.vb" />
     <Compile Include="API\Implementation\NotifyRequestMessage.vb" />
-    <Compile Include="API\Implementation\Output.vb" />
+    <Compile Include="API\Implementation\Input.vb" />
     <Compile Include="API\Implementation\Parameter.vb" />
     <Compile Include="API\Implementation\VerifyRequestMessage.vb" />
     <Compile Include="API\KeyRing.vb" />
