@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -21,18 +21,35 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
-
 Namespace API
 
-    ''' <summary>
-    ''' Specifies the priority level associated with a notification.
-    ''' </summary>
-    Public Enum Priority
-        VeryLow = -2
-        Moderate = -1
-        Normal = 0
-        High = 1
-        Emergency = 2
-    End Enum
+    Public Class NMAUsageChangedEventArgs : Inherits EventArgs
+
+        Public Sub New(remainingCalls As Integer, timeUntilReset As TimeSpan)
+            _callsRemaining = remainingCalls
+            _timeUntilReset = timeUntilReset
+        End Sub
+
+        Private _callsRemaining As Integer
+        ''' <summary>
+        ''' Indicates how many API calls can still be made using the current IP address.
+        ''' </summary>
+        Public ReadOnly Property CallsRemaining As Integer
+            Get
+                Return _callsRemaining
+            End Get
+        End Property
+
+        Private _timeUntilReset As TimeSpan
+        ''' <summary>
+        ''' Indicates how many minutes remain before the remaining amount of API calls resets.
+        ''' </summary>
+        Public ReadOnly Property TimeUntilReset As TimeSpan
+            Get
+                Return _timeUntilReset
+            End Get
+        End Property
+
+    End Class
 
 End Namespace

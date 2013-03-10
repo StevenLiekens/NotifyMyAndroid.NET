@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -22,32 +22,32 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API
+Namespace API.Implementation
 
     ''' <summary>
-    ''' The exception that is thrown if <see cref="NMAResponse.EnsureSuccessStatusCode"/> is called when its status code indicates failure.
+    ''' Represents an HTTP request message targeting the NMA verification API.
     ''' </summary>
-    Public Class NMAException : Inherits Exception
+    Friend Class VerifyRequestMessage : Inherits HttpRequestMessage
 
-        Public Sub New(status As StatusCode, message As String)
-            MyBase.New(message)
-            If Not [Enum].IsDefined(GetType(StatusCode), status) Then
-                Throw New ArgumentException("The specified status code is invalid.")
-            ElseIf status = StatusCode.Success Then
-                Throw New ArgumentException("The specified status code does not indicate failure.")
-            End If
-            _errorCode = status
+        Public Sub New(key As NMAKey)
+            Me.Method = HttpMethod.Get
+            Me.RequestUri = Me.GetRequestUri(key)
         End Sub
 
-        Private _errorCode As StatusCode
-        ''' <summary>
-        ''' Indicates the error code returned by the API.
-        ''' </summary>
-        Public ReadOnly Property ErrorCode As StatusCode
-            Get
-                Return _errorCode
-            End Get
-        End Property
+        Private Function GetRequestUri(key As NMAKey) As Uri
+            Dim builder = NMAClient.GetUriBuilder(NMACommand.Verify)
+            builder.Query = Me.GetQueryString(key)
+            Return builder.Uri
+        End Function
+
+        Private Function GetQueryString(key As NMAKey) As String
+            Dim builder As New Text.StringBuilder()
+            builder.Append("apikey=") : builder.Append(key.Value)
+            If NMAClient.DeveloperKey IsNot Nothing Then
+                builder.Append("&developerkey=") : builder.Append(NMAClient.DeveloperKey.Value)
+            End If
+            Return builder.ToString
+        End Function
 
     End Class
 

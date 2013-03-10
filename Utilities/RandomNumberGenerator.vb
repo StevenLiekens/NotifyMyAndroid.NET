@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -21,53 +21,31 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
-Imports System.Collections.ObjectModel
 
-Namespace API
+Namespace Utilities
 
     ''' <summary>
-    ''' Represents a collection of API keys.
+    ''' Provides static methods for creating random numbers.
     ''' </summary>
-    <Runtime.InteropServices.ComVisible(False)>
-    Public Class KeyRing : Inherits Collection(Of NMAKey)
+    Friend NotInheritable Class RandomNumberGenerator
 
-        Public Sub New()
-            MyBase.New()
+        Private Sub New()
         End Sub
 
-        Public Sub New(ParamArray keys As NMAKey())
-            MyBase.New(keys)
-        End Sub
+        Private Shared randomGenerator As New Lazy(Of Random)
 
         ''' <summary>
-        ''' Gets a comma seperated list of all API keys in this instance.
+        ''' Fills an array of the specified length with random bytes.
         ''' </summary>
-        Public Function ToQueryString() As String
-            If Me.Count = 0 Then
-                Return String.Empty
-            End If
-
-            Dim builder As New Text.StringBuilder
-
-            Dim count As Integer = 1
-            For Each key In Me
-                If key Is Nothing Then
-                    Continue For
-                End If
-                builder.Append(key.Value)
-                If count = Me.Count Then Exit For
-                builder.Append(",")
-                count += 1
-            Next
-
-            Return builder.ToString
-        End Function
-
-        Public Overrides Function ToString() As String
-            Return Me.ToQueryString
+        Public Shared Function GetRandomBytes(count As Integer) As Byte()
+            Dim buffer(count - 1) As Byte
+            SyncLock randomGenerator
+                randomGenerator.Value.NextBytes(buffer)
+            End SyncLock
+            Return buffer
         End Function
 
     End Class
 
-
 End Namespace
+

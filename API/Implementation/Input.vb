@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -22,27 +22,36 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API
+Namespace API.Implementation
 
     ''' <summary>
-    ''' Represents a success response.
+    ''' A helper class for comparing output parameters and creating new output parameters.
     ''' </summary>
-    ''' <remarks></remarks>
-    Public Class NMASuccess : Inherits NMAResponse
+    Friend NotInheritable Class Output : Inherits Parameter
 
-        Public Sub New(response As XDocument)
-            MyBase.New(response)
-            If Not Me.IsSuccessStatusCode Then
-                Throw New InvalidOperationException("The response does not indicate success.")
-            End If
+        Private Shared ReadOnly _code As New Output("code")
+        Private Shared ReadOnly _remaining As New Output("remaining")
+        Private Shared ReadOnly _resettimer As New Output("resettimer")
+
+        Private Sub New(parameter As String)
+            MyBase.New(parameter)
         End Sub
 
-        ''' <summary>
-        ''' Indicates the API calls quota associated with the current IP address.
-        ''' </summary>
-        Public ReadOnly Property CallsRemaining As Integer
+        Public Shared ReadOnly Property Code As Output
             Get
-                Return Me.GetAttribute(Of Integer)(Output.Remaining)
+                Return Output._code
+            End Get
+        End Property
+
+        Public Shared ReadOnly Property Remaining As Output
+            Get
+                Return Output._remaining
+            End Get
+        End Property
+
+        Public Shared ReadOnly Property ResetTimer As Output
+            Get
+                Return Output._resettimer
             End Get
         End Property
 

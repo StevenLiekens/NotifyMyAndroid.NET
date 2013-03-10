@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '

@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -21,32 +21,31 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
+
 Namespace API
 
-    Public Class NMAUsageChangedEventArgs : Inherits EventArgs
+    ''' <summary>
+    ''' The exception that is thrown if <see cref="NMAResponse.EnsureSuccessStatusCode"/> is called when its status code indicates failure.
+    ''' </summary>
+    Public Class NMAException : Inherits Exception
 
-        Public Sub New(remainingCalls As Integer, timeUntilReset As TimeSpan)
-            _callsRemaining = remainingCalls
-            _timeUntilReset = timeUntilReset
+        Public Sub New(status As StatusCode, message As String)
+            MyBase.New(message)
+            If Not [Enum].IsDefined(GetType(StatusCode), status) Then
+                Throw New ArgumentException("The specified status code is invalid.")
+            ElseIf status = StatusCode.Success Then
+                Throw New ArgumentException("The specified status code does not indicate failure.")
+            End If
+            _errorCode = status
         End Sub
 
-        Private _callsRemaining As Integer
+        Private _errorCode As StatusCode
         ''' <summary>
-        ''' Indicates how many API calls can still be made using the current IP address.
+        ''' Indicates the error code returned by the API.
         ''' </summary>
-        Public ReadOnly Property CallsRemaining As Integer
+        Public ReadOnly Property ErrorCode As StatusCode
             Get
-                Return _callsRemaining
-            End Get
-        End Property
-
-        Private _timeUntilReset As TimeSpan
-        ''' <summary>
-        ''' Indicates how many minutes remain before the remaining amount of API calls resets.
-        ''' </summary>
-        Public ReadOnly Property TimeUntilReset As TimeSpan
-            Get
-                Return _timeUntilReset
+                Return _errorCode
             End Get
         End Property
 

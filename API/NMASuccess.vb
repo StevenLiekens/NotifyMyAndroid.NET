@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -21,37 +21,29 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
+Imports NotifyMyAndroid.API.Implementation
 
 Namespace API
 
     ''' <summary>
-    ''' A helper class for comparing output parameters and creating new output parameters.
+    ''' Represents a success response.
     ''' </summary>
-    Friend NotInheritable Class Output : Inherits Parameter
+    ''' <remarks></remarks>
+    Public Class NMASuccess : Inherits NMAResponse
 
-        Public Shared _code As Output = New Output("code")
-        Public Shared _remaining As Output = New Output("remaining")
-        Public Shared _resettimer As Output = New Output("resettimer")
-
-        Private Sub New(parameter As String)
-            MyBase.New(parameter)
+        Public Sub New(response As XDocument)
+            MyBase.New(response)
+            If Not Me.IsSuccessStatusCode Then
+                Throw New InvalidOperationException("The response does not indicate success.")
+            End If
         End Sub
 
-        Public Shared ReadOnly Property Code As Output
+        ''' <summary>
+        ''' Indicates the API calls quota associated with the current IP address.
+        ''' </summary>
+        Public ReadOnly Property CallsRemaining As Integer
             Get
-                Return Output._code
-            End Get
-        End Property
-
-        Public Shared ReadOnly Property Remaining As Output
-            Get
-                Return Output._remaining
-            End Get
-        End Property
-
-        Public Shared ReadOnly Property ResetTimer As Output
-            Get
-                Return Output._resettimer
+                Return Me.GetAttribute(Of Integer)(Output.Remaining)
             End Get
         End Property
 

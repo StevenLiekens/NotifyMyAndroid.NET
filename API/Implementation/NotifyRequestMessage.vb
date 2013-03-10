@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -22,10 +22,10 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Http
+Namespace API.Implementation
 
     ''' <summary>
-    ''' Represents an HTTP request message targetting the NMA notification API.
+    ''' Represents an HTTP request message targeting the NMA notification API.
     ''' </summary>
     Friend Class NotifyRequestMessage : Inherits HttpRequestMessage
 

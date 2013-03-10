@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -22,7 +22,7 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Http
+Namespace API.Implementation
 
     ''' <summary>
     ''' A container for NMA notification name/value tuples encoded using application/x-www-form-urlencoded MIME type.

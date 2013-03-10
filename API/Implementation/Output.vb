@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -22,21 +22,21 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API
+Namespace API.Implementation
 
     ''' <summary>
     ''' A helper class for comparing input parameters and creating new input parameters.
     ''' </summary>
     Friend NotInheritable Class Input : Inherits Parameter
 
-        Public Shared _apiKey As Input = New Input("apikey")
-        Public Shared _application As Input = New Input("application")
-        Public Shared _event As Input = New Input("event")
-        Public Shared _description As Input = New Input("description")
-        Public Shared _priority As Input = New Input("priority")
-        Public Shared _url As Input = New Input("url")
-        Public Shared _contentType As Input = New Input("content-type")
-        Public Shared _developerkey As Input = New Input("developerkey")
+        Private Shared ReadOnly _apiKey As New Input("apikey")
+        Private Shared ReadOnly _application As New Input("application")
+        Private Shared ReadOnly _event As New Input("event")
+        Private Shared ReadOnly _description As New Input("description")
+        Private Shared ReadOnly _priority As New Input("priority")
+        Private Shared ReadOnly _url As New Input("url")
+        Private Shared ReadOnly _contentType As New Input("content-type")
+        Private Shared ReadOnly _developerkey As New Input("developerkey")
 
         Private Sub New(parameter As String)
             MyBase.New(parameter)

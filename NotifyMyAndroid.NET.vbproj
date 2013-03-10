@@ -60,27 +60,27 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Parameters\Output.vb" />
-    <Compile Include="Parameters\Input.vb" />
-    <Compile Include="NMAKey.vb" />
-    <Compile Include="Events\NMAUsageChangedEventArgs.vb" />
-    <Compile Include="HTTP\NotificationContent.vb" />
-    <Compile Include="HTTP\NotifyRequestMessage.vb" />
-    <Compile Include="HTTP\VerifyRequestMessage.vb" />
-    <Compile Include="NMACommand.vb" />
-    <Compile Include="Notifier.vb" />
-    <Compile Include="Parameters\Parameter.vb" />
-    <Compile Include="Priority.vb" />
-    <Compile Include="RandomNumberGenerator.vb" />
-    <Compile Include="Responses\NMAError.vb" />
-    <Compile Include="Responses\NMASuccess.vb" />
-    <Compile Include="Responses\StatusCode.vb" />
-    <Compile Include="KeyRing.vb" />
-    <Compile Include="Notification.vb" />
-    <Compile Include="Responses\NMAException.vb" />
+    <Compile Include="API\Implementation\Input.vb" />
+    <Compile Include="API\Implementation\NMACommand.vb" />
+    <Compile Include="API\Implementation\NotificationContent.vb" />
+    <Compile Include="API\Implementation\NotifyRequestMessage.vb" />
+    <Compile Include="API\Implementation\Output.vb" />
+    <Compile Include="API\Implementation\Parameter.vb" />
+    <Compile Include="API\Implementation\VerifyRequestMessage.vb" />
+    <Compile Include="API\KeyRing.vb" />
+    <Compile Include="API\NMAClient.vb" />
+    <Compile Include="API\NMAError.vb" />
+    <Compile Include="API\NMAException.vb" />
+    <Compile Include="API\NMAKey.vb" />
+    <Compile Include="API\NMAResponse.vb" />
+    <Compile Include="API\NMASuccess.vb" />
+    <Compile Include="API\NMAUsageChangedEventArgs.vb" />
+    <Compile Include="API\Notification.vb" />
+    <Compile Include="API\Notifier.vb" />
+    <Compile Include="API\Priority.vb" />
+    <Compile Include="API\StatusCode.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
-    <Compile Include="NMAClient.vb" />
-    <Compile Include="Responses\NMAResponse.vb" />
+    <Compile Include="Utilities\RandomNumberGenerator.vb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NotifyMyAndroid.NET.licenseheader" />

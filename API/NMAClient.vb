@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -21,6 +21,7 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
+Imports NotifyMyAndroid.API.Implementation
 
 Namespace API
 
@@ -187,8 +188,8 @@ Namespace API
         Private Shared Property LastUsageUpdate As Date?
 
         Private Async Function SendNotificationAsyncImplementation(recipients As KeyRing, notification As Notification) As Task(Of NMAResponse)
-            Using request As New Http.NotifyRequestMessage
-                request.Content = New Http.NotificationContent(recipients, notification)
+            Using request As New NotifyRequestMessage
+                request.Content = New NotificationContent(recipients, notification)
                 Using response = Await Me.HttpClient.SendAsync(request).ConfigureAwait(False)
                     Return Await HandleResponse(response).ConfigureAwait(False)
                 End Using
@@ -196,7 +197,7 @@ Namespace API
         End Function
 
         Private Async Function VerifyAsyncImplementation(key As NMAKey) As Task(Of NMAResponse)
-            Using request As New Http.VerifyRequestMessage(key)
+            Using request As New VerifyRequestMessage(key)
                 Using response = Await NMAClient.GetInstance.HttpClient.SendAsync(request).ConfigureAwait(False)
                     Return Await HandleResponse(response).ConfigureAwait(False)
                 End Using

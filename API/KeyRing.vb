@@ -1,4 +1,4 @@
-﻿#Region "LICENSE"
+#Region "LICENSE"
 ' Copyright 2013 Steven Liekens
 ' Contact: steven.liekens@gmail.com
 '
@@ -21,34 +21,53 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
+Imports System.Collections.ObjectModel
 
-Namespace API.Http
+Namespace API
 
     ''' <summary>
-    ''' Represents an HTTP request message targetting the NMA verification API.
+    ''' Represents a collection of API keys.
     ''' </summary>
-    Friend Class VerifyRequestMessage : Inherits HttpRequestMessage
+    <Runtime.InteropServices.ComVisible(False)>
+    Public Class KeyRing : Inherits Collection(Of NMAKey)
 
-        Public Sub New(key As NMAKey)
-            Me.Method = HttpMethod.Get
-            Me.RequestUri = Me.GetRequestUri(key)
+        Public Sub New()
+            MyBase.New()
         End Sub
 
-        Private Function GetRequestUri(key As NMAKey) As Uri
-            Dim builder = NMAClient.GetUriBuilder(NMACommand.Verify)
-            builder.Query = Me.GetQueryString(key)
-            Return builder.Uri
-        End Function
+        Public Sub New(ParamArray keys As NMAKey())
+            MyBase.New(keys)
+        End Sub
 
-        Private Function GetQueryString(key As NMAKey) As String
-            Dim builder As New Text.StringBuilder()
-            builder.Append("apikey=") : builder.Append(key.Value)
-            If NMAClient.DeveloperKey IsNot Nothing Then
-                builder.Append("&developerkey=") : builder.Append(NMAClient.DeveloperKey.Value)
+        ''' <summary>
+        ''' Gets a comma seperated list of all API keys in this instance.
+        ''' </summary>
+        Public Function ToQueryString() As String
+            If Me.Count = 0 Then
+                Return String.Empty
             End If
+
+            Dim builder As New Text.StringBuilder
+
+            Dim count As Integer = 1
+            For Each key In Me
+                If key Is Nothing Then
+                    Continue For
+                End If
+                builder.Append(key.Value)
+                If count = Me.Count Then Exit For
+                builder.Append(",")
+                count += 1
+            Next
+
             Return builder.ToString
         End Function
 
+        Public Overrides Function ToString() As String
+            Return Me.ToQueryString
+        End Function
+
     End Class
+
 
 End Namespace
