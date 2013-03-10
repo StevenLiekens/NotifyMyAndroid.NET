@@ -147,7 +147,7 @@ Namespace API
             Return Me.VerifyAsyncImplementation(key)
         End Function
 
-        Private Shared _usageChangedEventHandlers As New Lazy(Of List(Of EventHandler(Of NMAUsageChangedEventArgs)))
+        Private Shared ReadOnly UsageChangedEventHandlers As New Lazy(Of List(Of EventHandler(Of NMAUsageChangedEventArgs)))
         ''' <summary>
         ''' Occurs whenever <see cref="CallsRemaining"/> or <see cref="TimeUntilReset"/> are updated.
         ''' </summary>
@@ -156,19 +156,19 @@ Namespace API
         ''' </remarks>
         Public Shared Custom Event NMAUsageChanged As EventHandler(Of NMAUsageChangedEventArgs)
             AddHandler(value As EventHandler(Of NMAUsageChangedEventArgs))
-                If Not _usageChangedEventHandlers.Value.Contains(value) Then
-                    _usageChangedEventHandlers.Value.Add(value)
+                If Not UsageChangedEventHandlers.Value.Contains(value) Then
+                    UsageChangedEventHandlers.Value.Add(value)
                 End If
             End AddHandler
 
             RemoveHandler(value As EventHandler(Of NMAUsageChangedEventArgs))
-                If _usageChangedEventHandlers.Value.Contains(value) Then
-                    _usageChangedEventHandlers.Value.Remove(value)
+                If UsageChangedEventHandlers.Value.Contains(value) Then
+                    UsageChangedEventHandlers.Value.Remove(value)
                 End If
             End RemoveHandler
 
             RaiseEvent(sender As Object, e As NMAUsageChangedEventArgs)
-                For Each handler In _usageChangedEventHandlers.Value
+                For Each handler In UsageChangedEventHandlers.Value
                     If handler IsNot Nothing Then
                         Task.Factory.FromAsync(handler.BeginInvoke(sender, e, Nothing, Nothing), AddressOf handler.EndInvoke)
                     End If
