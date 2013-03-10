@@ -33,7 +33,7 @@ Namespace API.Implementation
             _name = name
         End Sub
 
-        Private _name As String
+        Private ReadOnly _name As String
         Public ReadOnly Property Name As String
             Get
                 Return _name
