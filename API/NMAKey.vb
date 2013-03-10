@@ -31,9 +31,9 @@ Namespace API
 
         Public Sub New(key As Byte())
             If key Is Nothing Then
-                Throw New ArgumentNullException("key", "Key cannot be empty.")
+                Throw New ArgumentNullException("key", "The key cannot be empty.")
             ElseIf key.Length <> 24 Then
-                Throw New ArgumentOutOfRangeException("key", "Key length must be exactly 24 bytes.")
+                Throw New ArgumentOutOfRangeException("key", "The key's length must be exactly 24 bytes.")
             End If
             _key = key
         End Sub
@@ -70,9 +70,9 @@ Namespace API
         ''' <param name="value">Hexadecimal string representation of an API key.</param>
         Public Shared Function Parse(value As String) As NMAKey
             If String.IsNullOrEmpty(value) Then
-                Throw New ArgumentNullException("value", "Value cannot be empty.")
+                Throw New ArgumentNullException("value", "The value cannot be empty.")
             ElseIf value.Length <> 48 Then
-                Throw New ArgumentOutOfRangeException("Invalid length: value must be a 48 bytes hexadecimal string.")
+                Throw New ArgumentOutOfRangeException("value", "The value must be a 48 bytes hexadecimal string.")
             End If
 
             Dim key As New Queue(Of Byte)
@@ -80,7 +80,7 @@ Namespace API
             Dim container As Byte = Nothing
             For i = 0 To value.Length - 1 Step 2
                 If Not Byte.TryParse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
-                    Throw New ArgumentException("Invalid data: value must be a hexadecimal string.")
+                    Throw New ArgumentException("The value must be a hexadecimal string.", "value")
                 End If
                 key.Enqueue(container)
             Next
