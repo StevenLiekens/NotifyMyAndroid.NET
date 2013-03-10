@@ -1,5 +1,4 @@
-﻿Imports System
-Imports System.Resources
+﻿Imports System.Resources
 Imports System.Reflection
 
 ' General Information about an assembly is controlled through the following 
