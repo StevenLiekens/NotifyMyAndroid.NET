@@ -52,6 +52,7 @@ Namespace API
                 If Me.StatusCode = API.StatusCode.Success Or Me.StatusCode = API.StatusCode.LimitReached Then
                     Return Me.GetAttribute(Of TimeSpan)(Output.ResetTimer)
                 End If
+                Return Nothing
             End Get
         End Property
 
@@ -96,7 +97,7 @@ Namespace API
 
 #Region "Implementation details"
 
-        Protected ReadOnly Property Source As XDocument
+        Private ReadOnly Property Source As XDocument
             Get
                 Return New XDocument(_source)
             End Get
@@ -114,14 +115,20 @@ Namespace API
             Dim value As String = Me.GetElement().Attribute(name).Value
             Select Case True
                 Case GetType(T) Is GetType(String)
-                    Return DirectCast(Convert.ChangeType(value, GetType(T)), T)
+                    Return DirectCast(CObj(value), T)
                 Case GetType(T) Is GetType(Integer)
-                    Return DirectCast(Convert.ChangeType(Integer.Parse(value), GetType(T)), T)
+                    Return DirectCast(CObj(Integer.Parse(value)), T)
                 Case GetType(T) Is GetType(TimeSpan)
-                    Return DirectCast(Convert.ChangeType(TimeSpan.FromMinutes(Integer.Parse(value)), GetType(T)), T)
+                    Return DirectCast(CObj(TimeSpan.FromMinutes(Integer.Parse(value))), T)
                 Case GetType(T) Is GetType(StatusCode)
-                    Return DirectCast(Convert.ChangeType([Enum].Parse(GetType(StatusCode), value), GetType(T)), T)
+                    Return DirectCast(CObj(ParseStatusCode(value)), T)
+                Case Else
+                    Return Nothing
             End Select
+        End Function
+
+        Private Function ParseStatusCode(value As String) As StatusCode
+            Return DirectCast([Enum].Parse(GetType(StatusCode), value), API.StatusCode)
         End Function
 
 #End Region
