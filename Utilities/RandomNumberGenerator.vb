@@ -32,7 +32,7 @@ Namespace Utilities
         Private Sub New()
         End Sub
 
-        Private Shared randomGenerator As New Lazy(Of Random)
+        Private Shared ReadOnly RandomGenerator As New Lazy(Of Random)
 
         ''' <summary>
         ''' Fills an array of the specified length with random bytes.
