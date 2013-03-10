@@ -44,10 +44,10 @@ Namespace API
             End Get
             Set(value As String)
                 If String.IsNullOrEmpty(value) Then
-                    Throw New ArgumentNullException("value", "Name cannot be empty.")
+                    Throw New ArgumentNullException("value", "The value cannot be empty.")
                 End If
                 If value.Length > 256 Then
-                    Throw New ArgumentOutOfRangeException("Name exceeds the 256 characters limitation.", "value")
+                    Throw New ArgumentOutOfRangeException("value", "The specified value exceeds the 256 characters limitation.")
                 End If
                 _from = value
             End Set
@@ -68,10 +68,10 @@ Namespace API
             End Get
             Set(value As String)
                 If String.IsNullOrEmpty(value) Then
-                    Throw New ArgumentNullException("value", "Subject cannot be empty.")
+                    Throw New ArgumentNullException("value", "The value cannot be empty.")
                 End If
                 If value.Length > 1000 Then
-                    Throw New ArgumentOutOfRangeException("Subject exceeds the 1000 characters limitation.", "value")
+                    Throw New ArgumentOutOfRangeException("value", "The specified value exceeds the 1000 characters limitation.")
                 End If
                 _subject = value
             End Set
@@ -98,10 +98,10 @@ Namespace API
             End Get
             Set(value As String)
                 If String.IsNullOrEmpty(value) Then
-                    Throw New ArgumentNullException("value", "Message cannot be empty.")
+                    Throw New ArgumentNullException("value", "The value cannot be empty.")
                 End If
                 If value.Length > 10000 Then
-                    Throw New ArgumentOutOfRangeException("Message exceeds the 10.000 characters limitation.", "value")
+                    Throw New ArgumentOutOfRangeException("value", "The specified value exceeds the 10.000 characters limitation.")
                 End If
                 _message = value
             End Set
@@ -119,7 +119,7 @@ Namespace API
             Set(value As Priority?)
                 If value.HasValue Then
                     If Not [Enum].IsDefined(GetType(Priority), value.Value) Then
-                        Throw New ArgumentOutOfRangeException("value", "Specified priority level is invalid.")
+                        Throw New ArgumentOutOfRangeException("value", "The specified value is invalid.")
                     End If
                 End If
                 _priority = value
@@ -137,7 +137,7 @@ Namespace API
             End Get
             Set(value As Uri)
                 If value IsNot Nothing AndAlso value.ToString.Length > 2000 Then
-                    Throw New ArgumentOutOfRangeException("Hyperlink exceeds the 2000 characters limitation.", "value")
+                    Throw New ArgumentOutOfRangeException("value", "The specified value exceeds the 2000 characters limitation.")
                 End If
                 _hyperlink = value
             End Set
