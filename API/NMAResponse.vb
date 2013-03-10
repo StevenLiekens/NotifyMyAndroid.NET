@@ -30,7 +30,7 @@ Namespace API
     ''' </summary>
     Public MustInherit Class NMAResponse
 
-        Private _source As XDocument
+        Private ReadOnly _source As XDocument
         Protected Sub New(response As XDocument)
             _source = response
         End Sub
