@@ -38,7 +38,7 @@ Namespace API
             _key = key
         End Sub
 
-        Private _key(23) As Byte
+        Private ReadOnly _key() As Byte
         ''' <summary>
         ''' Gets the API key.
         ''' </summary>
