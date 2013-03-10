@@ -30,7 +30,7 @@ Namespace API
             _timeUntilReset = timeUntilReset
         End Sub
 
-        Private _callsRemaining As Integer
+        Private ReadOnly _callsRemaining As Integer
         ''' <summary>
         ''' Indicates how many API calls can still be made using the current IP address.
         ''' </summary>
@@ -40,7 +40,7 @@ Namespace API
             End Get
         End Property
 
-        Private _timeUntilReset As TimeSpan
+        Private ReadOnly _timeUntilReset As TimeSpan
         ''' <summary>
         ''' Indicates how many minutes remain before the remaining amount of API calls resets.
         ''' </summary>
