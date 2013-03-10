@@ -29,13 +29,13 @@ Namespace API.Implementation
     ''' </summary>
     Friend Class NMACommand
 
-        Private Shared _verify As New NMACommand("verify")
-        Private Shared _notify As New NMACommand("notify")
+        Private Shared ReadOnly _verify As New NMACommand("verify")
+        Private Shared ReadOnly _notify As New NMACommand("notify")
 
-        Private _value As String
+        Private ReadOnly _value As String
 
-        Private Sub New(request As String)
-            _value = request
+        Private Sub New(value As String)
+            _value = value
         End Sub
 
         Public ReadOnly Property Value As String
