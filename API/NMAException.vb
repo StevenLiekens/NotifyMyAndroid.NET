@@ -39,7 +39,7 @@ Namespace API
             _errorCode = status
         End Sub
 
-        Private _errorCode As StatusCode
+        Private ReadOnly _errorCode As StatusCode
         ''' <summary>
         ''' Indicates the error code returned by the API.
         ''' </summary>
