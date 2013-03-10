@@ -33,7 +33,7 @@ Namespace API.Implementation
             MyBase.New(NotificationContent.GetQuery(recipients, notification))
         End Sub
 
-        Private Shared Function GetQuery(recipients As KeyRing, notification As Notification) As IDictionary(Of String, String)
+        Private Shared Function GetQuery(recipients As KeyRing, notification As Notification) As IEnumerable(Of KeyValuePair(Of String, String))
             Dim query As New Dictionary(Of String, String)
 
             With query
