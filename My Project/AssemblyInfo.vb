@@ -1,5 +1,5 @@
-﻿Imports System.Resources
-Imports System.Reflection
+﻿Imports System.Reflection
+Imports System.Resources
 
 ' General Information about an assembly is controlled through the following 
 ' set of attributes. Change these attribute values to modify the information
@@ -7,25 +7,25 @@ Imports System.Reflection
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("NotifyMyAndroid.NET")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("NotifyMyAndroid.NET")> 
-<Assembly: AssemblyCopyright("steven.liekens@gmail.com")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTitle("NotifyMyAndroid.NET")>
+<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyProduct("NotifyMyAndroid.NET")>
+<Assembly: AssemblyCopyright("steven.liekens@gmail.com")>
+<Assembly: AssemblyTrademark("")>
 <Assembly: NeutralResourcesLanguage("en")>
 
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")> 
+    ' Version information for an assembly consists of the following four values:
+    '
+    '      Major Version
+    '      Minor Version 
+    '      Build Number
+    '      Revision
+    '
+    ' You can specify all the values or you can default the Build and Revision Numbers 
+    ' by using the '*' as shown below:
+    ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
-<Assembly: AssemblyInformationalVersion("1.0 Final")> 
+<Assembly: AssemblyVersion("1.0.0.0")>
+<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: AssemblyInformationalVersion("1.0 Final")>

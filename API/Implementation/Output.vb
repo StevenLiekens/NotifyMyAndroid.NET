@@ -22,12 +22,13 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Implementation
 
+Namespace API.Implementation
     ''' <summary>
-    ''' A helper class for comparing output parameters and creating new output parameters.
+    '''     A helper class for comparing output parameters and creating new output parameters.
     ''' </summary>
-    Friend NotInheritable Class Output : Inherits Parameter
+    Friend NotInheritable Class Output
+        Inherits Parameter
 
         Private Shared ReadOnly _code As New Output("code")
         Private Shared ReadOnly _remaining As New Output("remaining")
@@ -39,22 +40,20 @@ Namespace API.Implementation
 
         Public Shared ReadOnly Property Code As Output
             Get
-                Return Output._code
+                Return _code
             End Get
         End Property
 
         Public Shared ReadOnly Property Remaining As Output
             Get
-                Return Output._remaining
+                Return _remaining
             End Get
         End Property
 
         Public Shared ReadOnly Property ResetTimer As Output
             Get
-                Return Output._resettimer
+                Return _resettimer
             End Get
         End Property
-
     End Class
-
 End Namespace

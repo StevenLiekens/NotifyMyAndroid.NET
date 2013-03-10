@@ -22,16 +22,16 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API
 
+Namespace API
     ''' <summary>
-    ''' Represents a notification.
+    '''     Represents a notification.
     ''' </summary>
     Public Class Notification
-
         Private _from As String
+
         ''' <summary>
-        ''' Indicates the person or application that is generating the call.
+        '''     Indicates the person or application that is generating the call.
         ''' </summary>
         ''' <remarks>Required. Maximum length is 256 characters.</remarks>
         ''' <example>Example: Nagios</example>
@@ -54,8 +54,9 @@ Namespace API
         End Property
 
         Private _subject As String
+
         ''' <summary>
-        ''' Indicates the subject of the notification.
+        '''     Indicates the subject of the notification.
         ''' </summary>
         ''' <remarks>Required. Maximum length is 1000 characters.</remarks>
         ''' <example>Example: Service is down!</example>
@@ -78,16 +79,17 @@ Namespace API
         End Property
 
         Private _message As String
+
         ''' <summary>
-        ''' Indicates the notification text.
+        '''     Indicates the notification text.
         ''' </summary>
         ''' <remarks>Required. Maximum length is 10.000 characters.</remarks>
         ''' <example>
-        ''' Example:
-        ''' Server: 1.2.3.4
-        ''' Service: mysqld
-        ''' Status: DOWN
-        ''' Time of the alert: 1/21/2011 1:32am
+        '''     Example:
+        '''     Server: 1.2.3.4
+        '''     Service: mysqld
+        '''     Status: DOWN
+        '''     Time of the alert: 1/21/2011 1:32am
         ''' </example>
         Public Property Message As String
             Get
@@ -108,8 +110,9 @@ Namespace API
         End Property
 
         Private _priority As Priority?
+
         ''' <summary>
-        ''' Indicates the priority level for this notification.
+        '''     Indicates the priority level for this notification.
         ''' </summary>
         ''' <remarks>Optional.</remarks>
         Public Property Priority As Priority?
@@ -127,8 +130,9 @@ Namespace API
         End Property
 
         Private _hyperlink As Uri
+
         ''' <summary>
-        ''' Indicates a URI/URL which can be activated by pressing the notification.
+        '''     Indicates a URI/URL which can be activated by pressing the notification.
         ''' </summary>
         ''' <remarks>Optional. Maximum length is 2000 characters.</remarks>
         Public Property HyperLink As Uri
@@ -144,27 +148,29 @@ Namespace API
         End Property
 
         ''' <summary>
-        ''' Indicates whether basic HTML tags should be interpreted and rendered while displaying the notification.
+        '''     Indicates whether basic HTML tags should be interpreted and rendered while displaying the notification.
         ''' </summary>
         Public Property IsHTML As Boolean
 
         ''' <summary>
-        ''' Sends this notification to the specified recipient and returns an object indicating the command result.
+        '''     Sends this notification to the specified recipient and returns an object indicating the command result.
         ''' </summary>
-        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
+        ''' <returns>
+        '''     Returns an instance of <see cref="NMASuccess" /> or <see cref="NMAError" /> depending on whether the call was successful.
+        ''' </returns>
         Public Function SendAsync(recipient As NMAKey) As Task(Of NMAResponse)
             Return NMAClient.GetInstance().SendNotificationAsync(recipient, Me)
         End Function
 
         ''' <summary>
-        ''' Sends this notification to all of the specified recipients and returns an object indicating the command result.
+        '''     Sends this notification to all of the specified recipients and returns an object indicating the command result.
         ''' </summary>
-        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
+        ''' <returns>
+        '''     Returns an instance of <see cref="NMASuccess" /> or <see cref="NMAError" /> depending on whether the call was successful.
+        ''' </returns>
         ''' <remarks>If the specified key ring contains one or more invalid API keys, this method will not report an error unless all of the keys were invalid.</remarks>
         Public Function SendAsync(recipients As KeyRing) As Task(Of NMAResponse)
             Return NMAClient.GetInstance().SendNotificationAsync(recipients, Me)
         End Function
-
     End Class
-
 End Namespace

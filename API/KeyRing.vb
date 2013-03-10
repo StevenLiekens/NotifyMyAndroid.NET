@@ -21,15 +21,18 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
+
+Imports System.Runtime.InteropServices
 Imports System.Collections.ObjectModel
+Imports System.Text
 
 Namespace API
-
     ''' <summary>
-    ''' Represents a collection of API keys.
+    '''     Represents a collection of API keys.
     ''' </summary>
-    <Runtime.InteropServices.ComVisible(False)>
-    Public Class KeyRing : Inherits Collection(Of NMAKey)
+    <ComVisible(False)>
+    Public Class KeyRing
+        Inherits Collection(Of NMAKey)
 
         Public Sub New()
             MyBase.New()
@@ -40,24 +43,19 @@ Namespace API
         End Sub
 
         ''' <summary>
-        ''' Gets a comma seperated list of all API keys in this instance.
+        '''     Gets a comma seperated list of all API keys in this instance.
         ''' </summary>
         Public Function ToQueryString() As String
-            Dim builder As New Text.StringBuilder
-
+            Dim builder As New StringBuilder
             For Each key In (From keys In Me Where keys IsNot Nothing)
                 builder.Append(key.Value)
                 builder.Append(",")
             Next
-
             Return builder.ToString.TrimEnd(","c)
         End Function
 
         Public Overrides Function ToString() As String
-            Return Me.ToQueryString
+            Return ToQueryString()
         End Function
-
     End Class
-
-
 End Namespace

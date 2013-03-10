@@ -22,18 +22,18 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Implementation
 
+Namespace API.Implementation
     ''' <summary>
-    ''' Base class for parameter container types.
+    '''     Base class for parameter container types.
     ''' </summary>
     Friend MustInherit Class Parameter
-
         Protected Sub New(name As String)
             _name = name
         End Sub
 
         Private ReadOnly _name As String
+
         Public ReadOnly Property Name As String
             Get
                 Return _name
@@ -43,20 +43,20 @@ Namespace API.Implementation
 #Region "Implementation details"
 
         Public Overrides Function Equals(obj As Object) As Boolean
-            Return Me.Equals(TryCast(obj, Parameter))
+            Return Equals(TryCast(obj, Parameter))
         End Function
 
         Public Overloads Function Equals(obj As Parameter) As Boolean
             If obj Is Nothing Then Return False
-            Return String.Equals(Me.Name, obj.Name, StringComparison.OrdinalIgnoreCase)
+            Return String.Equals(Name, obj.Name, StringComparison.OrdinalIgnoreCase)
         End Function
 
         Public Overrides Function GetHashCode() As Integer
-            Return Me.Name.ToUpperInvariant().GetHashCode()
+            Return Name.ToUpperInvariant().GetHashCode()
         End Function
 
         Public Overrides Function ToString() As String
-            Return Me.Name
+            Return Name
         End Function
 
         Public Overloads Shared Operator =(left As Parameter, right As Parameter) As Boolean
@@ -75,7 +75,5 @@ Namespace API.Implementation
         End Operator
 
 #End Region
-
     End Class
-
 End Namespace

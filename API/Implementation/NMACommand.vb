@@ -22,10 +22,10 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Implementation
 
+Namespace API.Implementation
     ''' <summary>
-    ''' A helper class for retrieving and comparing API commands.
+    '''     A helper class for retrieving and comparing API commands.
     ''' </summary>
     Friend Class NMACommand
 
@@ -46,23 +46,23 @@ Namespace API.Implementation
 
         Public Shared ReadOnly Property Verify As NMACommand
             Get
-                Return NMACommand._verify
+                Return _verify
             End Get
         End Property
 
         Public Shared ReadOnly Property Notify As NMACommand
             Get
-                Return NMACommand._notify
+                Return _notify
             End Get
         End Property
 
         Public Overrides Function Equals(obj As Object) As Boolean
-            Return Me.Equals(TryCast(obj, NMACommand))
+            Return Equals(TryCast(obj, NMACommand))
         End Function
 
         Public Overloads Function Equals(obj As NMACommand) As Boolean
             If obj Is Nothing Then Return False
-            Return String.Equals(Me.Value, obj.Value, StringComparison.OrdinalIgnoreCase)
+            Return String.Equals(Value, obj.Value, StringComparison.OrdinalIgnoreCase)
         End Function
 
         Public Shared Operator =(left As NMACommand, right As NMACommand) As Boolean
@@ -77,13 +77,11 @@ Namespace API.Implementation
         End Operator
 
         Public Overrides Function GetHashCode() As Integer
-            Return Me.Value.ToUpperInvariant().GetHashCode()
+            Return Value.ToUpperInvariant().GetHashCode()
         End Function
 
         Public Overrides Function ToString() As String
-            Return Me.Value
+            Return Value
         End Function
-
     End Class
-
 End Namespace

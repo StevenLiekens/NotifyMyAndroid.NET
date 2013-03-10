@@ -22,13 +22,14 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API
+Imports System.Globalization
+Imports NotifyMyAndroid.Utilities
 
+Namespace API
     ''' <summary>
-    ''' Represents an API key and provides methods to create, validate and compare API keys.
+    '''     Represents an API key and provides methods to create, validate and compare API keys.
     ''' </summary>
     Public Class NMAKey
-
         Public Sub New(key As Byte())
             If key Is Nothing Then
                 Throw New ArgumentNullException("key", "The key cannot be empty.")
@@ -39,8 +40,9 @@ Namespace API
         End Sub
 
         Private ReadOnly _key() As Byte
+
         ''' <summary>
-        ''' Gets the API key.
+        '''     Gets the API key.
         ''' </summary>
         Public ReadOnly Property Key As Byte()
             Get
@@ -49,7 +51,7 @@ Namespace API
         End Property
 
         ''' <summary>
-        ''' Gets the hexadecimal string representation of the API key.
+        '''     Gets the hexadecimal string representation of the API key.
         ''' </summary>
         Public ReadOnly Property Value As String
             Get
@@ -58,14 +60,14 @@ Namespace API
         End Property
 
         ''' <summary>
-        ''' Gets whether this API key is a valid key.
+        '''     Gets whether this API key is a valid key.
         ''' </summary>
         Public Async Function VerifyAsync() As Task(Of NMAResponse)
             Return Await NMAClient.GetInstance().VerifyAsync(Me).ConfigureAwait(False)
         End Function
 
         ''' <summary>
-        ''' Creates a new instance of <see cref="NMAKey"/> for the specified literal string.
+        '''     Creates a new instance of <see cref="NMAKey" /> for the specified literal string.
         ''' </summary>
         ''' <param name="value">Hexadecimal string representation of an API key.</param>
         Public Shared Function Parse(value As String) As NMAKey
@@ -79,7 +81,7 @@ Namespace API
 
             Dim container As Byte = Nothing
             For i = 0 To value.Length - 1 Step 2
-                If Not Byte.TryParse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
+                If Not Byte.TryParse(value.Substring(i, 2), NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo, container) Then
                     Throw New ArgumentException("The value must be a hexadecimal string.", "value")
                 End If
                 key.Enqueue(container)
@@ -89,10 +91,12 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' Attempts to create a new instance of <see cref="NMAKey"/> for the specified literal string.
+        '''     Attempts to create a new instance of <see cref="NMAKey" /> for the specified literal string.
         ''' </summary>
         ''' <param name="value">Hexadecimal string representation of an API key.</param>
-        ''' <returns>An instance of <see cref="NMAKey"/> if the call was successful; otherwise Nothing.</returns>
+        ''' <returns>
+        '''     An instance of <see cref="NMAKey" /> if the call was successful; otherwise Nothing.
+        ''' </returns>
         Public Shared Function TryParse(value As String) As NMAKey
             If String.IsNullOrEmpty(value) OrElse value.Length <> 48 Then
                 Return Nothing
@@ -102,7 +106,7 @@ Namespace API
             Dim container As Byte = Nothing
 
             For i = 0 To value.Length - 1 Step 2
-                If Not Byte.TryParse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
+                If Not Byte.TryParse(value.Substring(i, 2), NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo, container) Then
                     Return Nothing
                 End If
                 key.Enqueue(container)
@@ -112,7 +116,7 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' Gets whether the specified literal string is a valid key format.
+        '''     Gets whether the specified literal string is a valid key format.
         ''' </summary>
         Public Shared Function IsValidKeyFormat(value As String) As Boolean
             If String.IsNullOrEmpty(value) OrElse value.Length <> 48 Then
@@ -122,7 +126,7 @@ Namespace API
             Dim container As Byte
 
             For i = 0 To value.Length - 1 Step 2
-                If Not Byte.TryParse(value.Substring(i, 2), Globalization.NumberStyles.HexNumber, Globalization.NumberFormatInfo.InvariantInfo, container) Then
+                If Not Byte.TryParse(value.Substring(i, 2), NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo, container) Then
                     Return False
                 End If
             Next
@@ -130,28 +134,28 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' Generates a random key for testing purposes.
+        '''     Generates a random key for testing purposes.
         ''' </summary>
         ''' <remarks>There are 2¹⁹² possible key combinations, so the odds of this method ever returning an existing key are quite low.</remarks>
         Public Shared Function GenerateKey() As NMAKey
-            Return New NMAKey(Utilities.RandomNumberGenerator.GetRandomBytes(24))
+            Return New NMAKey(RandomNumberGenerator.GetRandomBytes(24))
         End Function
 
 #Region "Implementation details"
 
         Public Overrides Function ToString() As String
-            Return Me.Value
+            Return Value
         End Function
 
         Public Overrides Function Equals(obj As Object) As Boolean
-            Return Me.Equals(TryCast(obj, NMAKey))
+            Return Equals(TryCast(obj, NMAKey))
         End Function
 
         Public Overloads Function Equals(obj As NMAKey) As Boolean
             If obj Is Nothing Then Return False
 
             For i = 0 To 23
-                If Me._key(i) <> obj._key(i) Then
+                If _key(i) <> obj._key(i) Then
                     Return False
                 End If
             Next
@@ -175,12 +179,9 @@ Namespace API
         End Operator
 
         Public Overloads Shared Narrowing Operator CType(value As String) As NMAKey
-            Return NMAKey.Parse(value)
+            Return Parse(value)
         End Operator
 
 #End Region
-
     End Class
-
-
 End Namespace

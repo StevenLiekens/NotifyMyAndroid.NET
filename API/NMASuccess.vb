@@ -21,32 +21,31 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
+
 Imports NotifyMyAndroid.API.Implementation
 
 Namespace API
-
     ''' <summary>
-    ''' Represents a success response.
+    '''     Represents a success response.
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class NMASuccess : Inherits NMAResponse
+    Public Class NMASuccess
+        Inherits NMAResponse
 
         Public Sub New(response As XDocument)
             MyBase.New(response)
-            If Not Me.IsSuccessStatusCode Then
+            If Not IsSuccessStatusCode Then
                 Throw New InvalidOperationException("The response does not indicate success.")
             End If
         End Sub
 
         ''' <summary>
-        ''' Indicates the API calls quota associated with the current IP address.
+        '''     Indicates the API calls quota associated with the current IP address.
         ''' </summary>
         Public ReadOnly Property CallsRemaining As Integer
             Get
-                Return Me.GetAttribute(Of Integer)(Output.Remaining)
+                Return GetAttribute(Of Integer)(Output.Remaining)
             End Get
         End Property
-
     End Class
-
 End Namespace

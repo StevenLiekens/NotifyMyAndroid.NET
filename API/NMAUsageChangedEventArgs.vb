@@ -21,9 +21,11 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
-Namespace API
 
-    Public Class NMAUsageChangedEventArgs : Inherits EventArgs
+
+Namespace API
+    Public Class NMAUsageChangedEventArgs
+        Inherits EventArgs
 
         Public Sub New(remainingCalls As Integer, timeUntilReset As TimeSpan)
             _callsRemaining = remainingCalls
@@ -31,8 +33,9 @@ Namespace API
         End Sub
 
         Private ReadOnly _callsRemaining As Integer
+
         ''' <summary>
-        ''' Indicates how many API calls can still be made using the current IP address.
+        '''     Indicates how many API calls can still be made using the current IP address.
         ''' </summary>
         Public ReadOnly Property CallsRemaining As Integer
             Get
@@ -41,15 +44,14 @@ Namespace API
         End Property
 
         Private ReadOnly _timeUntilReset As TimeSpan
+
         ''' <summary>
-        ''' Indicates how many minutes remain before the remaining amount of API calls resets.
+        '''     Indicates how many minutes remain before the remaining amount of API calls resets.
         ''' </summary>
         Public ReadOnly Property TimeUntilReset As TimeSpan
             Get
                 Return _timeUntilReset
             End Get
         End Property
-
     End Class
-
 End Namespace

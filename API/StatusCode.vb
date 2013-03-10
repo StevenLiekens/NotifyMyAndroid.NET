@@ -22,10 +22,10 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API
 
+Namespace API
     ''' <summary>
-    ''' Specifies the status code associated with a response.
+    '''     Specifies the status code associated with a response.
     ''' </summary>
     Public Enum StatusCode
         Success = 200
@@ -34,5 +34,4 @@ Namespace API
         LimitReached = 402
         InternalError = 500
     End Enum
-
 End Namespace

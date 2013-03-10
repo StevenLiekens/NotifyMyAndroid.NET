@@ -22,15 +22,16 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Implementation
 
+Namespace API.Implementation
     ''' <summary>
-    ''' A container for NMA notification name/value tuples encoded using application/x-www-form-urlencoded MIME type.
+    '''     A container for NMA notification name/value tuples encoded using application/x-www-form-urlencoded MIME type.
     ''' </summary>
-    Friend Class NotificationContent : Inherits FormUrlEncodedContent
+    Friend Class NotificationContent
+        Inherits FormUrlEncodedContent
 
         Sub New(recipients As KeyRing, notification As Notification)
-            MyBase.New(NotificationContent.GetQuery(recipients, notification))
+            MyBase.New(GetQuery(recipients, notification))
         End Sub
 
         Private Shared Function GetQuery(recipients As KeyRing, notification As Notification) As IEnumerable(Of KeyValuePair(Of String, String))
@@ -58,7 +59,5 @@ Namespace API.Implementation
 
             Return query
         End Function
-
     End Class
-
 End Namespace

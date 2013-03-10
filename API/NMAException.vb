@@ -22,12 +22,13 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API
 
+Namespace API
     ''' <summary>
-    ''' The exception that is thrown if <see cref="NMAResponse.EnsureSuccessStatusCode"/> is called when its status code indicates failure.
+    '''     The exception that is thrown if <see cref="NMAResponse.EnsureSuccessStatusCode" /> is called when its status code indicates failure.
     ''' </summary>
-    Public Class NMAException : Inherits Exception
+    Public Class NMAException
+        Inherits Exception
 
         Public Sub New(status As StatusCode, message As String)
             MyBase.New(message)
@@ -40,15 +41,14 @@ Namespace API
         End Sub
 
         Private ReadOnly _errorCode As StatusCode
+
         ''' <summary>
-        ''' Indicates the error code returned by the API.
+        '''     Indicates the error code returned by the API.
         ''' </summary>
         Public ReadOnly Property ErrorCode As StatusCode
             Get
                 Return _errorCode
             End Get
         End Property
-
     End Class
-
 End Namespace

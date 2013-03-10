@@ -21,38 +21,41 @@
 ' OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
+
 Imports NotifyMyAndroid.API.Implementation
 
 Namespace API
-
     ''' <summary>
-    ''' Provides methods for interacting with the Notify My Android public API.
+    '''     Provides methods for interacting with the Notify My Android public API.
     ''' </summary>
-    Public Class NMAClient : Implements IDisposable
+    Public Class NMAClient
+        Implements IDisposable
 
         Shared Sub New()
-            NMAClient.SetUsage(800, TimeSpan.MaxValue)
+            SetUsage(800, TimeSpan.MaxValue)
         End Sub
 
         Private Sub New()
         End Sub
 
         Private Shared _instance As New Lazy(Of NMAClient)(Function() New NMAClient())
+
         ''' <summary>
-        ''' Gets an instance.
+        '''     Gets an instance.
         ''' </summary>
         Public Shared Function GetInstance() As NMAClient
             Return _instance.Value
         End Function
 
         ''' <summary>
-        ''' Indicates whether to use HTTPS.
+        '''     Indicates whether to use HTTPS.
         ''' </summary>
         Public Shared Property UseSSL As Boolean = True
 
         Private Shared _developerKey As NMAKey
+
         ''' <summary>
-        ''' Gets or sets a developer key.
+        '''     Gets or sets a developer key.
         ''' </summary>
         ''' <remarks>A developer key lifts the hourly API call limit.</remarks>
         Public Shared Property DeveloperKey As NMAKey
@@ -65,12 +68,13 @@ Namespace API
         End Property
 
         Private Shared _callsRemaining As Integer
+
         ''' <summary>
-        ''' Indicates how many API calls can still be made using the current IP address.
+        '''     Indicates how many API calls can still be made using the current IP address.
         ''' </summary>
         ''' <remarks>
-        ''' This value is synchronized with the server whenever an API call is made using the current object instance.
-        ''' If other applications targetting the NMA API are active on the current IP address, this value may go out of sync with the actual amount of remaining calls.
+        '''     This value is synchronized with the server whenever an API call is made using the current object instance.
+        '''     If other applications targetting the NMA API are active on the current IP address, this value may go out of sync with the actual amount of remaining calls.
         ''' </remarks>
         Public Shared Property CallsRemaining As Integer
             Get
@@ -82,19 +86,20 @@ Namespace API
         End Property
 
         Private Shared _timeUntilReset As TimeSpan
+
         ''' <summary>
-        ''' Indicates how many minutes before the remaining amount of API calls resets.
+        '''     Indicates how many minutes before the remaining amount of API calls resets.
         ''' </summary>
         ''' <remarks>
-        ''' This value is synchronised with the server whenever an API call is made using the current object instance.
-        ''' However, <see cref="NMAClient"/> does try to calculate the actual value in between calls.
+        '''     This value is synchronised with the server whenever an API call is made using the current object instance.
+        '''     However, <see cref="NMAClient" /> does try to calculate the actual value in between calls.
         ''' </remarks>
         Public Shared Property TimeUntilReset As TimeSpan
             Get
                 If _timeUntilReset = TimeSpan.MaxValue Then
                     Return _timeUntilReset
                 End If
-                Dim estimatedTimeSince = Date.Now - NMAClient.LastUsageUpdate.Value
+                Dim estimatedTimeSince = Date.Now - LastUsageUpdate.Value
 
                 If _timeUntilReset - estimatedTimeSince < TimeSpan.Zero Then
                     SetUsage(800, TimeSpan.MaxValue)
@@ -109,22 +114,26 @@ Namespace API
         End Property
 
         ''' <summary>
-        ''' Sends the specified notification to the specified recipient.
+        '''     Sends the specified notification to the specified recipient.
         ''' </summary>
-        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
+        ''' <returns>
+        '''     Returns an instance of <see cref="NMASuccess" /> or <see cref="NMAError" /> depending on whether the call was successful.
+        ''' </returns>
         Public Function SendNotificationAsync(recipient As NMAKey, notification As Notification) As Task(Of NMAResponse)
             If recipient Is Nothing Then
                 Throw New ArgumentNullException("recipient", "The recipient cannot be empty.")
             End If
             Dim ring As New KeyRing()
             ring.Add(recipient)
-            Return Me.SendNotificationAsync(ring, notification)
+            Return SendNotificationAsync(ring, notification)
         End Function
 
         ''' <summary>
-        ''' Sends the specified notification to all of the specified recipients.
+        '''     Sends the specified notification to all of the specified recipients.
         ''' </summary>
-        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
+        ''' <returns>
+        '''     Returns an instance of <see cref="NMASuccess" /> or <see cref="NMAError" /> depending on whether the call was successful.
+        ''' </returns>
         Public Function SendNotificationAsync(recipients As KeyRing, notification As Notification) As Task(Of NMAResponse)
             If recipients Is Nothing Then
                 Throw New ArgumentNullException("recipients", "The recipients cannot be empty.")
@@ -132,26 +141,29 @@ Namespace API
             If notification Is Nothing Then
                 Throw New ArgumentNullException("notification", "The notification cannot be empty.")
             End If
-            Return Me.SendNotificationAsyncImplementation(recipients, notification)
+            Return SendNotificationAsyncImplementation(recipients, notification)
         End Function
 
         ''' <summary>
-        ''' Gets whether the specified key is valid.
+        '''     Gets whether the specified key is valid.
         ''' </summary>
-        ''' <returns>Returns an instance of <see cref="NMASuccess"/> or <see cref="NMAError"/> depending on whether the call was successful.</returns>
+        ''' <returns>
+        '''     Returns an instance of <see cref="NMASuccess" /> or <see cref="NMAError" /> depending on whether the call was successful.
+        ''' </returns>
         Public Function VerifyAsync(key As NMAKey) As Task(Of NMAResponse)
             If key Is Nothing Then
                 Throw New ArgumentNullException("key", "The key cannot be empty.")
             End If
-            Return Me.VerifyAsyncImplementation(key)
+            Return VerifyAsyncImplementation(key)
         End Function
 
         Private Shared ReadOnly UsageChangedEventHandlers As New Lazy(Of List(Of EventHandler(Of NMAUsageChangedEventArgs)))
+
         ''' <summary>
-        ''' Occurs whenever <see cref="CallsRemaining"/> or <see cref="TimeUntilReset"/> are updated.
+        '''     Occurs whenever <see cref="CallsRemaining" /> or <see cref="TimeUntilReset" /> are updated.
         ''' </summary>
         ''' <remarks>
-        ''' This event typically occurs whenever an API call is made, because that's when values are synchronized with the server.
+        '''     This event typically occurs whenever an API call is made, because that's when values are synchronized with the server.
         ''' </remarks>
         Public Shared Custom Event NMAUsageChanged As EventHandler(Of NMAUsageChangedEventArgs)
             AddHandler(value As EventHandler(Of NMAUsageChangedEventArgs))
@@ -178,6 +190,7 @@ Namespace API
 #Region "Implementation details"
 
         Private _client As New Lazy(Of HttpClient)(False)
+
         Private ReadOnly Property HttpClient As HttpClient
             Get
                 Return _client.Value
@@ -189,7 +202,7 @@ Namespace API
         Private Async Function SendNotificationAsyncImplementation(recipients As KeyRing, notification As Notification) As Task(Of NMAResponse)
             Using request As New NotifyRequestMessage
                 request.Content = New NotificationContent(recipients, notification)
-                Using response = Await Me.HttpClient.SendAsync(request).ConfigureAwait(False)
+                Using response = Await HttpClient.SendAsync(request).ConfigureAwait(False)
                     Return Await HandleResponse(response).ConfigureAwait(False)
                 End Using
             End Using
@@ -197,7 +210,7 @@ Namespace API
 
         Private Async Function VerifyAsyncImplementation(key As NMAKey) As Task(Of NMAResponse)
             Using request As New VerifyRequestMessage(key)
-                Using response = Await NMAClient.GetInstance.HttpClient.SendAsync(request).ConfigureAwait(False)
+                Using response = Await GetInstance.HttpClient.SendAsync(request).ConfigureAwait(False)
                     Return Await HandleResponse(response).ConfigureAwait(False)
                 End Using
             End Using
@@ -208,7 +221,7 @@ Namespace API
             Dim xml = XDocument.Load(Await response.Content.ReadAsStreamAsync().ConfigureAwait(False))
             Dim result = NMAResponse.GetResponse(xml)
 
-            Dim time As TimeSpan = NMAClient.TimeUntilReset
+            Dim time As TimeSpan = TimeUntilReset
             If result.TimeUntilReset.HasValue Then
                 time = result.TimeUntilReset.Value
             ElseIf time = TimeSpan.MaxValue Then
@@ -223,15 +236,15 @@ Namespace API
             Else
                 calls -= 1
             End If
-            NMAClient.SetUsage(calls, time)
+            SetUsage(calls, time)
 
             Return result
         End Function
 
         Private Shared Sub SetUsage(calls As Integer, time As TimeSpan)
-            NMAClient.LastUsageUpdate = Date.Now
-            NMAClient.CallsRemaining = calls
-            NMAClient.TimeUntilReset = time
+            LastUsageUpdate = Date.Now
+            CallsRemaining = calls
+            TimeUntilReset = time
             RaiseEvent NMAUsageChanged(Nothing, New NMAUsageChangedEventArgs(calls, time))
         End Sub
 
@@ -250,10 +263,11 @@ Namespace API
 #End Region
 
 #Region "IDisposable Support"
+
         Private _disposedValue As Boolean ' To detect redundant calls
 
         Protected Overridable Sub Dispose(disposing As Boolean)
-            If Not Me._disposedValue Then
+            If Not _disposedValue Then
                 If disposing Then
                     _instance = New Lazy(Of NMAClient)(Function() New NMAClient())
                     If _client IsNot Nothing AndAlso _client.IsValueCreated Then
@@ -262,16 +276,14 @@ Namespace API
                     _client = Nothing
                 End If
             End If
-            Me._disposedValue = True
+            _disposedValue = True
         End Sub
 
         Public Sub Dispose() Implements IDisposable.Dispose
             Dispose(True)
             GC.SuppressFinalize(Me)
         End Sub
+
 #End Region
-
     End Class
-
-
 End Namespace

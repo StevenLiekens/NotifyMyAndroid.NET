@@ -22,33 +22,35 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Implementation
+Imports System.Text
 
+Namespace API.Implementation
     ''' <summary>
-    ''' Represents an HTTP request message targeting the NMA verification API.
+    '''     Represents an HTTP request message targeting the NMA verification API.
     ''' </summary>
-    Friend Class VerifyRequestMessage : Inherits HttpRequestMessage
+    Friend Class VerifyRequestMessage
+        Inherits HttpRequestMessage
 
         Public Sub New(key As NMAKey)
-            Me.Method = HttpMethod.Get
-            Me.RequestUri = Me.GetRequestUri(key)
+            Method = HttpMethod.Get
+            RequestUri = GetRequestUri(key)
         End Sub
 
-        Private Function GetRequestUri(key As NMAKey) As Uri
+        Private Shared Function GetRequestUri(key As NMAKey) As Uri
             Dim builder = NMAClient.GetUriBuilder(NMACommand.Verify)
-            builder.Query = Me.GetQueryString(key)
+            builder.Query = GetQueryString(key)
             Return builder.Uri
         End Function
 
-        Private Function GetQueryString(key As NMAKey) As String
-            Dim builder As New Text.StringBuilder()
-            builder.Append("apikey=") : builder.Append(key.Value)
+        Private Shared Function GetQueryString(key As NMAKey) As String
+            Dim builder As New StringBuilder()
+            builder.Append("apikey=")
+            builder.Append(key.Value)
             If NMAClient.DeveloperKey IsNot Nothing Then
-                builder.Append("&developerkey=") : builder.Append(NMAClient.DeveloperKey.Value)
+                builder.Append("&developerkey=")
+                builder.Append(NMAClient.DeveloperKey.Value)
             End If
             Return builder.ToString
         End Function
-
     End Class
-
 End Namespace

@@ -22,16 +22,17 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Implementation
 
+Namespace API.Implementation
     ''' <summary>
-    ''' Represents an HTTP request message targeting the NMA notification API.
+    '''     Represents an HTTP request message targeting the NMA notification API.
     ''' </summary>
-    Friend Class NotifyRequestMessage : Inherits HttpRequestMessage
+    Friend Class NotifyRequestMessage
+        Inherits HttpRequestMessage
 
         Public Sub New()
-            Me.Method = HttpMethod.Post
-            Me.RequestUri = NMAClient.GetUriBuilder(NMACommand.Notify).Uri
+            Method = HttpMethod.Post
+            RequestUri = NMAClient.GetUriBuilder(NMACommand.Notify).Uri
         End Sub
 
         Public Sub New(content As NotificationContent)
@@ -47,7 +48,5 @@ Namespace API.Implementation
                 MyBase.Content = value
             End Set
         End Property
-
     End Class
-
 End Namespace

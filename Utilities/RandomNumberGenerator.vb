@@ -22,30 +22,27 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace Utilities
 
+Namespace Utilities
     ''' <summary>
-    ''' Provides static methods for creating random numbers.
+    '''     Provides static methods for creating random numbers.
     ''' </summary>
     Friend NotInheritable Class RandomNumberGenerator
-
         Private Sub New()
         End Sub
 
         Private Shared ReadOnly RandomGenerator As New Lazy(Of Random)
 
         ''' <summary>
-        ''' Fills an array of the specified length with random bytes.
+        '''     Fills an array of the specified length with random bytes.
         ''' </summary>
         Public Shared Function GetRandomBytes(count As Integer) As Byte()
             Dim buffer(count - 1) As Byte
-            SyncLock randomGenerator
-                randomGenerator.Value.NextBytes(buffer)
+            SyncLock RandomGenerator
+                RandomGenerator.Value.NextBytes(buffer)
             End SyncLock
             Return buffer
         End Function
-
     End Class
-
 End Namespace
 

@@ -22,12 +22,13 @@
 ' WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #End Region
 
-Namespace API.Implementation
 
+Namespace API.Implementation
     ''' <summary>
-    ''' A helper class for comparing input parameters and creating new input parameters.
+    '''     A helper class for comparing input parameters and creating new input parameters.
     ''' </summary>
-    Friend NotInheritable Class Input : Inherits Parameter
+    Friend NotInheritable Class Input
+        Inherits Parameter
 
         Private Shared ReadOnly _apiKey As New Input("apikey")
         Private Shared ReadOnly _application As New Input("application")
@@ -44,52 +45,50 @@ Namespace API.Implementation
 
         Public Shared ReadOnly Property APIKey As Input
             Get
-                Return Input._apiKey
+                Return _apiKey
             End Get
         End Property
 
         Public Shared ReadOnly Property Application As Input
             Get
-                Return Input._application
+                Return _application
             End Get
         End Property
 
         Public Shared ReadOnly Property [Event] As Input
             Get
-                Return Input._event
+                Return _event
             End Get
         End Property
 
         Public Shared ReadOnly Property Description As Input
             Get
-                Return Input._description
+                Return _description
             End Get
         End Property
 
         Public Shared ReadOnly Property Priority As Input
             Get
-                Return Input._priority
+                Return _priority
             End Get
         End Property
 
         Public Shared ReadOnly Property URL As Input
             Get
-                Return Input._url
+                Return _url
             End Get
         End Property
 
         Public Shared ReadOnly Property ContentType As Input
             Get
-                Return Input._contentType
+                Return _contentType
             End Get
         End Property
 
         Public Shared ReadOnly Property DeveloperKey As Input
             Get
-                Return Input._developerkey
+                Return _developerkey
             End Get
         End Property
-
     End Class
-
 End Namespace
