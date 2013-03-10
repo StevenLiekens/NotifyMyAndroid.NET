@@ -28,8 +28,7 @@ Namespace API
     ''' <summary>
     ''' Provides methods for interacting with the Notify My Android public API.
     ''' </summary>
-    Public Class NMAClient
-        Implements IDisposable
+    Public Class NMAClient : Implements IDisposable
 
         Shared Sub New()
             NMAClient.SetUsage(800, TimeSpan.MaxValue)
@@ -95,13 +94,13 @@ Namespace API
                 If _timeUntilReset = TimeSpan.MaxValue Then
                     Return _timeUntilReset
                 End If
-                Dim EstimatedTimeSince = Date.Now - NMAClient.LastUsageUpdate.Value
+                Dim estimatedTimeSince = Date.Now - NMAClient.LastUsageUpdate.Value
 
-                If _timeUntilReset - EstimatedTimeSince < TimeSpan.Zero Then
+                If _timeUntilReset - estimatedTimeSince < TimeSpan.Zero Then
                     SetUsage(800, TimeSpan.MaxValue)
                     Return _timeUntilReset
                 Else
-                    Return TimeSpan.FromMinutes(Math.Ceiling((_timeUntilReset - EstimatedTimeSince).TotalSeconds / 60))
+                    Return TimeSpan.FromMinutes(Math.Ceiling((_timeUntilReset - estimatedTimeSince).TotalSeconds / 60))
                 End If
             End Get
             Private Set(value As TimeSpan)
@@ -209,31 +208,31 @@ Namespace API
             Dim xml = XDocument.Load(Await response.Content.ReadAsStreamAsync().ConfigureAwait(False))
             Dim result = NMAResponse.GetResponse(xml)
 
-            Dim timeUntilReset As TimeSpan = NMAClient.TimeUntilReset
+            Dim time As TimeSpan = NMAClient.TimeUntilReset
             If result.TimeUntilReset.HasValue Then
-                timeUntilReset = result.TimeUntilReset.Value
-            ElseIf timeUntilReset = TimeSpan.MaxValue Then
-                timeUntilReset = New TimeSpan(1, 0, 0)
+                time = result.TimeUntilReset.Value
+            ElseIf time = TimeSpan.MaxValue Then
+                time = New TimeSpan(1, 0, 0)
             End If
 
-            Dim callsRemaining As Integer = _callsRemaining
+            Dim calls As Integer = _callsRemaining
             If result.IsSuccessStatusCode Then
-                callsRemaining = DirectCast(result, NMASuccess).CallsRemaining
+                calls = DirectCast(result, NMASuccess).CallsRemaining
             ElseIf result.StatusCode = StatusCode.LimitReached Then
-                callsRemaining = 0
+                calls = 0
             Else
-                callsRemaining -= 1
+                calls -= 1
             End If
-            NMAClient.SetUsage(callsRemaining, timeUntilReset)
+            NMAClient.SetUsage(calls, time)
 
             Return result
         End Function
 
-        Private Shared Sub SetUsage(callsRemaining As Integer, timeUntilReset As TimeSpan)
+        Private Shared Sub SetUsage(calls As Integer, time As TimeSpan)
             NMAClient.LastUsageUpdate = Date.Now
-            NMAClient.CallsRemaining = callsRemaining
-            NMAClient.TimeUntilReset = timeUntilReset
-            RaiseEvent NMAUsageChanged(Nothing, New NMAUsageChangedEventArgs(callsRemaining, timeUntilReset))
+            NMAClient.CallsRemaining = calls
+            NMAClient.TimeUntilReset = time
+            RaiseEvent NMAUsageChanged(Nothing, New NMAUsageChangedEventArgs(calls, time))
         End Sub
 
         Friend Shared Function GetUriBuilder(command As NMACommand) As UriBuilder
@@ -251,10 +250,10 @@ Namespace API
 #End Region
 
 #Region "IDisposable Support"
-        Private disposedValue As Boolean ' To detect redundant calls
+        Private _disposedValue As Boolean ' To detect redundant calls
 
         Protected Overridable Sub Dispose(disposing As Boolean)
-            If Not Me.disposedValue Then
+            If Not Me._disposedValue Then
                 If disposing Then
                     _instance = New Lazy(Of NMAClient)(Function() New NMAClient())
                     If _client IsNot Nothing AndAlso _client.IsValueCreated Then
@@ -263,7 +262,7 @@ Namespace API
                     _client = Nothing
                 End If
             End If
-            Me.disposedValue = True
+            Me._disposedValue = True
         End Sub
 
         Public Sub Dispose() Implements IDisposable.Dispose
