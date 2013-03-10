@@ -43,24 +43,14 @@ Namespace API
         ''' Gets a comma seperated list of all API keys in this instance.
         ''' </summary>
         Public Function ToQueryString() As String
-            If Me.Count = 0 Then
-                Return String.Empty
-            End If
-
             Dim builder As New Text.StringBuilder
 
-            Dim count As Integer = 1
-            For Each key In Me
-                If key Is Nothing Then
-                    Continue For
-                End If
+            For Each key In (From keys In Me Where keys IsNot Nothing)
                 builder.Append(key.Value)
-                If count = Me.Count Then Exit For
                 builder.Append(",")
-                count += 1
             Next
 
-            Return builder.ToString
+            Return builder.ToString.TrimEnd(","c)
         End Function
 
         Public Overrides Function ToString() As String
