@@ -112,23 +112,19 @@ Namespace API
         End Function
 
         Protected Function GetAttribute(Of T)(name As String) As T
-            Dim value As String = Me.GetElement().Attribute(name).Value
+            Dim attribute As XAttribute = Me.GetElement().Attribute(name)
             Select Case True
                 Case GetType(T) Is GetType(String)
-                    Return DirectCast(CObj(value), T)
+                    Return DirectCast(CObj(CStr(attribute)), T)
                 Case GetType(T) Is GetType(Integer)
-                    Return DirectCast(CObj(Integer.Parse(value)), T)
+                    Return DirectCast(CObj(CInt(attribute)), T)
                 Case GetType(T) Is GetType(TimeSpan)
-                    Return DirectCast(CObj(TimeSpan.FromMinutes(Integer.Parse(value))), T)
+                    Return DirectCast(CObj(TimeSpan.FromMinutes(CInt(attribute))), T)
                 Case GetType(T) Is GetType(StatusCode)
-                    Return DirectCast(CObj(ParseStatusCode(value)), T)
+                    Return DirectCast(CObj(CType(CInt(attribute), StatusCode)), T)
                 Case Else
                     Return Nothing
             End Select
-        End Function
-
-        Private Function ParseStatusCode(value As String) As StatusCode
-            Return DirectCast([Enum].Parse(GetType(StatusCode), value), API.StatusCode)
         End Function
 
 #End Region
