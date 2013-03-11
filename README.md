@@ -1,7 +1,9 @@
 About
 ===================
-NotifyMyAndroid.NET is a portable class library, currently targetting the .NET Framework 4.5 and .NET for Windows Store apps.
-It is essentially a thin wrapper around the new HTTP APIs in the System.Net.Http namespace. I'd recommend you'd check it out if you haven't already.
+NotifyMyAndroid.NET is a portable class library, compatible with the .NET Framework 4.5 and .NET for Windows Store apps.
+
+NotifyMyAndroid.NET is essentially a thin wrapper around the new HTTP APIs in the [System.Net.Http](http://msdn.microsoft.com/en-us/library/system.net.http.aspx) namespace. Check it out if you haven't already.
+
 
 Usage
 ===================
